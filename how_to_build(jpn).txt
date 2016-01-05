@@ -1,0 +1,160 @@
+﻿
+textmovieのビルド方法：
+==============================================================================
+
+まずビルド環境の構築：
+
+MINGW/MSYSの構築（Cygwinでも良いですがちょっと手直し必要かも）
+==============================================================================
+http://www.mingw.org/
+ここからセットアップツールをダウンロードして、必要なツールを選択構築して
+いっても良いのですが、有志が作ったパッケージをダウンロードすると楽です
+
+XhmikosR's build のMSYS構築パックを導入すると解凍するだけですぐ使えます
+http://xhmikosr.1f0.de/tools/
+msysフォルダの
+MSYS_MinGW-w64-GCC_492_x86-x64_Full.7z
+をダウンロード （60MB程度　492はGCCのバージョン 別に4.92にこだわる必要はありません）
+
+MinGW内のツールをビルドした環境によってVisual Studioの再頒布パッケージが
+必要になるかもしれません
+以前、上記のGCC4.92版のフルパッケージをクリーンなwindows8.1で利用したときは
+msvcr120.dllが無くてyasmがエラーになってしまいました
+この例のmsvcr120.dll不足の場合はVisual Studio 2013のVisual C++再頒布パッケージ
+が必要になります
+
+Visual Studio 2013のVisual C++再頒布パッケージ：
+https://www.microsoft.com/ja-jp/download/details.aspx?id=40784
+
+このあたりはツールの出所やPCの環境によるので、コンパイル時にdll不足の
+メッセージが出た場合はそれに対応して再頒布パッケージをインストール
+してください
+いろんなソフトをインストールしてるPCなら、これらの再頒布パッケージは既に
+インストールされている可能性が高いです
+
+==============================================================================
+
+msys.bat でコンソール起動
+
+解凍したフォルダ内にmsys.batがあるので、これをダブルクリックで起動すると
+MinGW環境のコンソールが現れます
+コマンドもlsなどunix, linuxでおなじみのものが使えます
+
+
+ビルド作業（32bit版アプリケーションのビルドの場合）：
+
+まず最初に
+PKG_CONFIG_PATHが環境変数に設定されていない場合は設定しておく
+envコマンドで確認
+PKG_CONFIG_PATHの項目がなければエクスポート
+
+例：（ディレクトリ /mingw/i686-w64-mingw32 がベースの場合）
+export PKG_CONFIG_PATH=/mingw/i686-w64-mingw32/lib/pkgconfig
+
+シェル起動時に毎回入力するのが面倒な人はホームディレクトリに.profileという
+ファイルを作りその中で上のexportを記述すればシェル起動時に自動的に設定されます
+
+
+==============================================================================
+SDLのビルド：
+https://www.libsdl.org/
+https://www.libsdl.org/download-1.2.php
+SDL-1.2.15のソースコードをダウンロード
+
+ソースの一部を手直しする
+
+アプリケーションを切り替えると音が出なくなる現象：
+http://forums.libsdl.org/viewtopic.php?t=3262&sid=8b6b39145837edcb041f24eb7de54dc5
+SDL-1.2.15/src/audio/windx5/SDL_dx5audio.c
+line238:
+    DX5_SoundFocus()の中身をコメントアウトする
+----------------------------------------
+	void DX5_SoundFocus(HWND hwnd)
+    {
+        // mainwin = hwnd;
+    }
+----------------------------------------
+または、
+line535:
+    format.dwFlagsにDSBCAPS_GLOBALFOCUSを与えるようにする
+----------------------------------------
+    // format.dwFlags |= DSBCAPS_STICKYFOCUS;
+    format.dwFlags |= DSBCAPS_GLOBALFOCUS;
+----------------------------------------
+
+    flagセットなし：アプリケーションを切り替えると無音
+    DSBCAPS_STICKYFOCUS：非DirectSoundアプリとの切り替えは音が出るけどDirectSoundアプリとは排他的
+    DSBCAPS_GLOBALFOCUS：他のDirectSoundアプリと切り替えても明示的に排他処理をしない限りは音が出る
+    上記フラグはDirectSoundの仕様
+
+
+configure オプション：
+--disable-assembly
+textmovieではビデオは使わないためこのオプションは必要ないけど
+32bit版ffplay作成にはアライメントの関係で実行時にエラーになってしまうので必要
+一応このオプションでビルドしておく
+http://blog.k-tai-douga.com/article/57314191.html
+（このサイトの人と同様に自分も簡単な解決策が見つからなかった
+　64bit版ビルドの場合は大丈夫だけど念のためおまじない）
+
+--disable-stdio-redirect
+stdoutをリダイレクトされるのを抑制
+これが無いとstdoutを使ってコンソールに文字を出力できない
+http://sdl.beuc.net/sdl.wiki/FAQ_Console
+
+
+SDLビルドコマンド実行例：
+./configure --prefix=/mingw/i686-w64-mingw32 --disable-assembly --disable-stdio-redirect
+make clean
+make -j4
+make install
+
+
+==============================================================================
+ffmpeg (libav*ライブラリ）のビルド：
+ffmpegのソースを入手
+http://ffmpeg.org/
+http://ffmpeg.org/download.html
+ffmpegの最新のソースコードをダウンロード
+手元のものは2.5系で動かしてます
+2.7系でも問題なくビルドできました
+textmovieがAPI的に過去のどのバージョンまで動かせるかは不明
+バージョンが古いほうが当然ながらビルド後のサイズは小さくなります
+
+ffmpegビルドコマンド実行例：
+（ライブラリ作成＋ffmpegの実行ファイルも作成する場合）
+./configure --prefix=/mingw/i686-w64-mingw32 --enable-gpl --disable-w32threads 
+ --enable-static --enable-shared --extra-ldflags="-static -mconsole" --pkg-config-flags="--static"
+make clean
+make -j4
+make install
+
+SDLのチェックを兼ねて、できあがったffplayでなにか動画を再生してみてうまく再生できるか
+確認すると良いでしょう
+ffplay.exeはconfigureを実行したディレクトリ内にできているはず
+ffplay自体がビルドできなかった場合は、SDLのライブラリのビルドがうまくいってない
+可能性があります（この場合はconfigure時にSDLが認識されてるかどうかチェック）
+
+ffmpegは大きなソフトウェアなのでビルドにはけっこう時間がかかります
+ビルド時間の目安は
+i7 2600, make -j6（6並列）で3分くらい
+i7 2600, make (シングル）で15分くらい
+i3 330m, make -j4 で15分くらい
+Atom Z3735F, make -j2で30分くらい
+
+==============================================================================
+textmovieのビルド：
+（Windows環境のみ）
+
+ソースのあるディレクトリをカレントディレクトリにして
+make clean
+make all
+でMakefileのあるディレクトリに実行ファイルができあがります
+
+ffmpegに外部ライブラリをいろいろ組み込んでいる場合はビルド時に他のライブラリが必要になるかもしれません
+その場合はMakefileのLDLIBSにライブラリを追加してください
+デフォルトではスタティックリンクですが、動的リンク（sharedライブラリ）で動かしたい場合は
+MakefileのLDFLAGSの-staticを削除してください
+その場合、dll検索ディレクトリにアプリケーションが使用する全てのライブラリ（dll）を置く必要があります
+
+
