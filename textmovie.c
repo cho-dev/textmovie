@@ -19,7 +19,7 @@
     decode code is referred to ffmpeg sample source 'filtering_video.c' 'filtering_audio.c'
 */
 
-#define TEXTMOVIE_TEXTMOVIE_VERSION  20160104
+#define TEXTMOVIE_TEXTMOVIE_VERSION  20160107
 #ifdef _WIN64
 #define TEXTMOVIE_TEXTMOVIE_NAME  "textmovie64.exe"
 #else
@@ -1519,8 +1519,7 @@ int Playlist_Make(wchar_t *dirname, int count)
     if ((attr != 0xFFFFFFFF) && (attr & FILE_ATTRIBUTE_DIRECTORY)) {
         hdl = FindFirstFileW(dpath, &fd);
         if (hdl != INVALID_HANDLE_VALUE) {
-            if ( (fd.dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE) && 
-                !(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
+            if ( !(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
                 !(fd.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) &&
                 !(fd.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ) {
                 //CheckOptionFilename(fd.cFileName);
@@ -1536,8 +1535,9 @@ int Playlist_Make(wchar_t *dirname, int count)
 	                    CopyMediaInfo2PlaylistData(ppd, &minfo);
 	                    if (Playlist_AddData(ppd) == -1) {
 	                        Playlist_FreeData(ppd);
+	                    } else {
+	                        count++;
 	                    }
-	                    count++;
 	                    //printf("Filename1=%s\n", ppd->filename);
 	                    //_getch();
 	                }
@@ -1555,8 +1555,7 @@ int Playlist_Make(wchar_t *dirname, int count)
 		        }
             }
             while ( FindNextFileW(hdl, &fd) ) {
-                if ( (fd.dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE) && 
-                    !(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
+                if ( !(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
 	                !(fd.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) &&
 	                !(fd.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ) {
                     //CheckOptionFilename(fd.cFileName);
@@ -1572,8 +1571,9 @@ int Playlist_Make(wchar_t *dirname, int count)
 		                    CopyMediaInfo2PlaylistData(ppd, &minfo);
 		                    if (Playlist_AddData(ppd) == -1) {
 		                        Playlist_FreeData(ppd);
+		                    } else {
+		                        count++;
 		                    }
-		                    count++;
 	                        //printf("Filename3=%s\n", ppd->filename);
 	                        //_getch();
 		                }
