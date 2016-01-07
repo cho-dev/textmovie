@@ -26,8 +26,7 @@ resource.rc  ===> resource file
 buildcount.sh  ===> build count utility
 Makefile  ===> Makefile
 
-textmovie.exe  ===> binary of textmovie
-textmovie.ini  ===> sample .ini file for textmovie
+textmovie.ini  ===> sample .ini file for textmovie.exe
 
 
 -------------------------------------------------------------------
