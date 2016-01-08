@@ -30,3 +30,9 @@
 
 # Debug files
 *.dSYM/
+
+# Archives
+*.zip
+*.gz
+*.bz2
+*.tar
