@@ -22,12 +22,16 @@
 
 #include "audiowave.h"
 
-#define PLAYBACK_AUDIO_SAMPLE 48000
 // FT_COSINETABLE_LENGTH must be power of 2
 #define FT_COSINETABLE_LENGTH 2048
 
 static int gAudioWaveType = 0;
 static int gAudioWaveSpectrumBase = 3;  // use in AudioWave_SpectrumTone()
+static int gAudioWaveSampleRate = 48000;
+
+void AudioWave_SetSampleRate(int freq) {
+    gAudioWaveSampleRate = freq;
+}
 
 int AudioWave_CurrentWaveType(void) {
     return gAudioWaveType;
@@ -113,7 +117,7 @@ void AudioWave_Wave(TextScreenBitmap *wavebitmap, const int16_t *stream16buf, in
     int32_t sdat32;
     int x, y, yoffset;
     int lpos, rpos;
-    int count;
+    int count, maxdrawcount;
     TextScreenBitmap *bitmap;
     
     bitmap = TextScreen_CreateBitmap(wavebitmap->width, wavebitmap->height);
@@ -122,7 +126,9 @@ void AudioWave_Wave(TextScreenBitmap *wavebitmap, const int16_t *stream16buf, in
     lpos = bitmap->height * 1 / 4;   // Left  draw offset
     rpos = bitmap->height * 3 / 4;   // Right draw offset
     
-    for (count = 0; count < stream16len; count++) {
+    maxdrawcount = (stream16len > (bitmap->width * 2)) ? bitmap->width * 2 : stream16len;
+    
+    for (count = 0; count < maxdrawcount; count++) {
         sdat32 = (int32_t)stream16buf[count];   // int16_t to int32_t to prevent overflow
         x = count / 2;
         y = sdat32 * bitmap->height / 65536 / 2;
@@ -350,7 +356,7 @@ void AudioWave_Spectrum(TextScreenBitmap *wavebitmap, const int16_t *stream16buf
     if (!bitmap) return;
 	
 	
-	samplerate = PLAYBACK_AUDIO_SAMPLE;  // (48000)
+	samplerate = gAudioWaveSampleRate;
     
     costablelen = FT_COSINETABLE_LENGTH;
     costablemask = costablelen - 1;
@@ -392,8 +398,11 @@ void AudioWave_Spectrum(TextScreenBitmap *wavebitmap, const int16_t *stream16buf
 	    if (countmax > (stream16len / 2)) {
 	        countmax = (stream16len / 2);
 	    }
-	    
 	    countmaxa[i] = countmax;
+	    if ((freq * 2) > gAudioWaveSampleRate) {
+	        continue;
+	    }
+	    
 	    //for (count = 0; count < stream16len; count+=2) {
 	    for (count = 0; count < (countmax * 2); count+=2) {
 	        sample = (count >> 1);
@@ -425,6 +434,7 @@ void AudioWave_Spectrum(TextScreenBitmap *wavebitmap, const int16_t *stream16buf
         
         //lpf[i] = lpf[i] >> (11 + 14);  // 11 = samples (1 << 11), 14 = max 65536 (1 << 16) = (1 << 30) / (1 << 14)
         //lpfd[i] = lpfd[i] >> (11 + 14);
+        if (countmaxa[i] == 0) countmaxa[i] = 1;
         lpf[i]  = (lpf[i] >> 14) / countmaxa[i];  // 11 = samples (1 << 11), 14 = max 65536 (1 << 16) = (1 << 30) / (1 << 14)
         lpfd[i] = (lpfd[i] >> 14) / countmaxa[i];
         mag = sqrt(lpf[i]*lpf[i] + lpfd[i]*lpfd[i]);
@@ -473,7 +483,7 @@ void AudioWave_SpectrumTone(TextScreenBitmap *wavebitmap, const int16_t *stream1
     if (!bitmap) return;
     
     
-	samplerate = PLAYBACK_AUDIO_SAMPLE;  // (48000)
+	samplerate = gAudioWaveSampleRate;
     
     costablelen = FT_COSINETABLE_LENGTH;
     costablemask = costablelen - 1;
@@ -554,6 +564,7 @@ void AudioWave_SpectrumTone(TextScreenBitmap *wavebitmap, const int16_t *stream1
         for (j = 0; j < 1; j++) {
             //lpf[i+j*12] = lpf[i+j*12] >> (11 + 14);
             //lpfd[i+j*12] = lpfd[i+j*12] >> (11 + 14);
+            if (countmaxa[i] == 0) countmaxa[i] = 1;
             lpf[i]  = (lpf[i] >> 14) / countmaxa[i];  // 11 = samples (1 << 11), 14 = max 65536 (1 << 16) = (1 << 30) / (1 << 14)
             lpfd[i] = (lpfd[i] >> 14) / countmaxa[i];
             mag = sqrt(lpf[i+j*12]*lpf[i+j*12] + lpfd[i+j*12]*lpfd[i+j*12]);

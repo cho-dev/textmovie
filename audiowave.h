@@ -32,6 +32,7 @@ enum AudioWaveType {
 };
 
 void AudioWave_Draw(TextScreenBitmap *bitmap, const int16_t *stream16buf, int stream16len);
+void AudioWave_SetSampleRate(int freq);
 int  AudioWave_CurrentWaveType(void);
 void AudioWave_NextWaveType(void);
 void AudioWave_PreviousWaveType(void);

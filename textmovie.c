@@ -19,7 +19,7 @@
     decode code is referred to ffmpeg sample source 'filtering_video.c' 'filtering_audio.c'
 */
 
-#define TEXTMOVIE_TEXTMOVIE_VERSION  20160107
+#define TEXTMOVIE_TEXTMOVIE_VERSION  20160109
 #ifdef _WIN64
 #define TEXTMOVIE_TEXTMOVIE_NAME  "textmovie64.exe"
 #else
@@ -65,7 +65,7 @@ typedef pthread_mutex_t   mutexobj_t;
 #define MUTEX_UNLOCK(x)   pthread_mutex_unlock(&(x))
 
 
-#define PLAYBACK_AUDIO_SAMPLE  48000
+#define DEFAULT_PLAYBACK_AUDIO_SAMPLE  48000
 
 // use timeGetTime() instead of GetTimeCount() (include mmsystem.h)
 #define GetTickCount timeGetTime
@@ -122,6 +122,8 @@ static int     gReadDoneVideo = 0;
 static int     gOptionShuffle = 0;
 static int     gFrameDrop = 0;
 static int     gBarMode = 0;
+static int     gSampleRate = DEFAULT_PLAYBACK_AUDIO_SAMPLE;
+static int     gInitSampleRate = DEFAULT_PLAYBACK_AUDIO_SAMPLE;
 
 //static int64_t gCallPrevTime = 0;  // test for callback
 //static int64_t gCallDiff = 0;      // test for callback
@@ -177,6 +179,10 @@ void ReadInitFile(const char *lpFileName)
     if (gVolume < 0) gVolume = 0;
     if (gVolume > 500) gVolume = 500;
     gVolume = (gVolume / 5) * 5;
+    
+    gInitSampleRate = (int)GetPrivateProfileInt(lpAppName, "SampleRate", DEFAULT_PLAYBACK_AUDIO_SAMPLE, lpFileName);
+    if (gInitSampleRate < 22050) gInitSampleRate = 22050;
+    if (gInitSampleRate > 48000) gInitSampleRate = 48000;
 }
 
 void Clear_Cuedata(int type)
@@ -612,7 +618,7 @@ int AudioStream_InitFilters(const char *filters_descr)
     AVFilterInOut *inputs  = avfilter_inout_alloc();
     static const enum AVSampleFormat out_sample_fmts[] = { AV_SAMPLE_FMT_S16, -1 };
     static const int64_t out_channel_layouts[] = { AV_CH_LAYOUT_STEREO, -1 };
-    static const int out_sample_rates[] = { PLAYBACK_AUDIO_SAMPLE, -1 };
+    int out_sample_rates[] = { gSampleRate, -1 };
     const AVFilterLink *outlink;
     AVRational time_base = afmt_ctx->streams[audio_stream_index]->time_base;
     
@@ -803,10 +809,10 @@ static void AudioStream_SDLCallback(void *userdata, uint8_t *stream, int len)
 	    if (abuf) {
 	        if (diffcheck) {
 	            // 48000Hz, 2ch, 16bit  ->  pts delay = (data byte) * 1000000 / 48000 / 4
-	            CheckClockDifference(abuf->pts + ((int64_t)abuf->pos * 1000000L / PLAYBACK_AUDIO_SAMPLE / 4));
+	            CheckClockDifference(abuf->pts + ((int64_t)abuf->pos * 1000000L / (int64_t)gSampleRate / 4));
 	            diffcheck = 0;
 	        }
-	        gAudioCurrentPts = abuf->pts + ((int64_t)abuf->pos * 1000000L / PLAYBACK_AUDIO_SAMPLE / 4);
+	        gAudioCurrentPts = abuf->pts + ((int64_t)abuf->pos * 1000000L / (int64_t)gSampleRate / 4);
 	        gAudioCurrentPlaynum = abuf->playnum;
 	        
 	        data = (int16_t *)abuf->data;
@@ -1025,7 +1031,7 @@ int AudioStream_ReadAndBuffer(void)
 	        samples = afilter_frame->nb_samples * 2;
 	        p = (int16_t *)afilter_frame->data[0];
 	        
-			ptsoffset += (int64_t)(samples / 2) * 1000000L / PLAYBACK_AUDIO_SAMPLE;
+			ptsoffset += (int64_t)(samples / 2) * 1000000L / (int64_t)gSampleRate;
 	        
 	        if (gDebugDecode) {
 		        //TextScreen_Wait(100);
@@ -1050,14 +1056,14 @@ int AudioStream_ReadAndBuffer(void)
 			                //if (pd->audio_itunsmpb && !(pd->video)) {
 			                if (pd->audio_itunsmpb) {
 			                    resample_comp = 0;
-			                    if (pd->audio_sample_rate != PLAYBACK_AUDIO_SAMPLE) {  // compensation for resample
+			                    if (pd->audio_sample_rate != gSampleRate) {  // compensation for resample
 			                        resample_comp = 16;
 			                    }
 			                    // +edelay for compare pts (currentsample)
 			                    sample48len = ((int64_t)pd->audio_smpb_length + (int64_t)pd->audio_smpb_edelay + resample_comp)
-			                                     * PLAYBACK_AUDIO_SAMPLE / pd->audio_sample_rate;
-			                    //sample48len = ((int64_t)pd->audio_smpb_length) * PLAYBACK_AUDIO_SAMPLE / pd->audio_sample_rate;
-			                    currentsample = pts_time * PLAYBACK_AUDIO_SAMPLE / 1000000;
+			                                     * gSampleRate / pd->audio_sample_rate;
+			                    //sample48len = ((int64_t)pd->audio_smpb_length) * gSampleRate / pd->audio_sample_rate;
+			                    currentsample = pts_time * gSampleRate / 1000000;
 			                    //printf("%d:%d ",(int)currentsample, (int)sample48len);
 			                    if (currentsample + (samples / 2) > sample48len) {
 			                        samples = (sample48len - currentsample) * 2;
@@ -1336,7 +1342,7 @@ void Stream_Restart(const wchar_t *filename, int seamless)
 	    gReadDoneAudio = 0;
 	    gReadDoneVideo = 0;
 	    // initialize audio stream (open file, init filters)
-	    //snprintf(strbuf, sizeof(strbuf), "aresample=%d,aformat=sample_fmts=s16:channel_layouts=stereo", (int)PLAYBACK_AUDIO_SAMPLE);
+	    //snprintf(strbuf, sizeof(strbuf), "aresample=%d,aformat=sample_fmts=s16:channel_layouts=stereo", (int)gSampleRate);
 	    snprintf(strbuf, sizeof(strbuf), "anull");
 	    if ((ret = AudioStream_OpenFile(gFilename)) < 0) {
 	        gReadDoneAudio = 1;
@@ -2421,6 +2427,9 @@ int main(int argc, char *argv[])
         Get_DirNameFromFullpath(strbuf, sizeof(strbuf) , argv[0]);
         snprintf(strbuf2, sizeof(strbuf), "%s%s", strbuf, TEXTMOVIE_TEXTMOVIE_INITFILE_NAME);
         ReadInitFile(strbuf2);
+        
+        gSampleRate = gInitSampleRate;
+        AudioWave_SetSampleRate(gSampleRate);
     }
     
     {  // set codec debug mode
@@ -2490,7 +2499,7 @@ int main(int argc, char *argv[])
     SDL_Init(SDL_INIT_AUDIO | SDL_INIT_TIMER);
     
     // SDL audio setting
-    desired.freq = PLAYBACK_AUDIO_SAMPLE;
+    desired.freq = gSampleRate;
     desired.format = AUDIO_S16LSB;
     desired.channels = 2;
     desired.samples = 2048;

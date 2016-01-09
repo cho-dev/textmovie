@@ -1,4 +1,4 @@
 // This file is update by buildcount.sh automatically.
 // Please don't touch.
-#define VER_FILEVERSION 1,1,0,409
-#define VER_FILEVERSION_STR "1.1.0.409\0"
+#define VER_FILEVERSION 1,1,0,423
+#define VER_FILEVERSION_STR "1.1.0.423\0"
