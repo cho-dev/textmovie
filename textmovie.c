@@ -19,7 +19,7 @@
     decode code is referred to ffmpeg sample source 'filtering_video.c' 'filtering_audio.c'
 */
 
-#define TEXTMOVIE_TEXTMOVIE_VERSION  20160109
+#define TEXTMOVIE_TEXTMOVIE_VERSION  20160111
 #ifdef _WIN64
 #define TEXTMOVIE_TEXTMOVIE_NAME  "textmovie64.exe"
 #else
@@ -65,7 +65,7 @@ typedef pthread_mutex_t   mutexobj_t;
 #define MUTEX_UNLOCK(x)   pthread_mutex_unlock(&(x))
 
 
-#define DEFAULT_PLAYBACK_AUDIO_SAMPLE  48000
+#define DEFAULT_PLAYBACK_AUDIO_SAMPLE  44100
 
 // use timeGetTime() instead of GetTimeCount() (include mmsystem.h)
 #define GetTickCount timeGetTime
@@ -979,7 +979,8 @@ int AudioStream_ReadAndBuffer(void)
         if (ret < 0) {
             av_log(NULL, AV_LOG_ERROR, "Error decoding audio\n");
             av_log(NULL, AV_LOG_ERROR, "ret=%d:%016x\n", ret, ret);
-            av_free_packet(&apacket0);
+            // av_free_packet(&apacket0);
+            av_packet_unref(&apacket0);
             apacket0.data = NULL;
             return 0;
         }
@@ -989,7 +990,8 @@ int AudioStream_ReadAndBuffer(void)
         
         if (!got_frame) {
             if (apacket.size <= 0) {
-                av_free_packet(&apacket0);
+                // av_free_packet(&apacket0);
+                av_packet_unref(&apacket0);
                 apacket0.data = NULL;
             }
             return 0;
@@ -997,7 +999,8 @@ int AudioStream_ReadAndBuffer(void)
         
         if (av_buffersrc_add_frame_flags(abuffersrc_ctx, aframe, 0) < 0) {
             av_log(NULL, AV_LOG_ERROR, "Error while feeding the audio filtergraph\n");
-            av_free_packet(&apacket0);
+            // av_free_packet(&apacket0);
+            av_packet_unref(&apacket0);
             apacket0.data = NULL;
             return -1;
         }
@@ -1016,7 +1019,8 @@ int AudioStream_ReadAndBuffer(void)
             }
             if (ret < 0) {
                 av_frame_unref(aframe);
-                av_free_packet(&apacket0);
+                // av_free_packet(&apacket0);
+                av_packet_unref(&apacket0);
                 apacket0.data = NULL;
                 return -1;
             }
@@ -1066,7 +1070,7 @@ int AudioStream_ReadAndBuffer(void)
 			                    currentsample = pts_time * gSampleRate / 1000000;
 			                    //printf("%d:%d ",(int)currentsample, (int)sample48len);
 			                    if (currentsample + (samples / 2) > sample48len) {
-			                        samples = (sample48len - currentsample) * 2;
+			                        samples = (sample48len - currentsample - 1) * 2;
 			                        if (samples < 0) samples = 0;
 			                        // printf("s=%d   ", samples);
 			                    }
@@ -1105,16 +1109,19 @@ int AudioStream_ReadAndBuffer(void)
         av_frame_unref(aframe);
         
 	    if (apacket.size <= 0) {
-	        av_free_packet(&apacket0);
+	        // av_free_packet(&apacket0);
+	        av_packet_unref(&apacket0);
 	        apacket0.data = NULL;
 	    }
     } else {
-        av_free_packet(&apacket0);
+        // av_free_packet(&apacket0);
+        av_packet_unref(&apacket0);
     }
     
     /*
     if (apacket.size <= 0) {
-        av_free_packet(&apacket0);
+        // av_free_packet(&apacket0);
+        av_packet_unref(&apacket0);
         apacket0.data = NULL;
     }
     */
@@ -1150,7 +1157,8 @@ int VideoStream_ReadAndBuffer(void)
 	        ret = avcodec_decode_video2(dec_ctx, frame, &got_frame, &packet);
 	        if (ret < 0) {
 	            av_log(NULL, AV_LOG_ERROR, "Error decoding video\n");
-	            av_free_packet(&packet);
+	            // av_free_packet(&packet);
+	            av_packet_unref(&packet);
 	            if (ret == AVERROR_INVALIDDATA) {
 	                return 0;
 	            } else {
@@ -1160,7 +1168,8 @@ int VideoStream_ReadAndBuffer(void)
         }
         
         if (!got_frame) {
-            av_free_packet(&packet);
+            //av_free_packet(&packet);
+            av_packet_unref(&packet);
             //printf("png! ret=%d", ret);
             return 0;
         }
@@ -1185,7 +1194,8 @@ int VideoStream_ReadAndBuffer(void)
             if (ret < 0) {
                 av_frame_unref(filter_frame);
                 av_frame_unref(frame);
-                av_free_packet(&packet);
+                // av_free_packet(&packet);
+                av_packet_unref(&packet);
                 return -1;
             }
             
@@ -1241,7 +1251,8 @@ int VideoStream_ReadAndBuffer(void)
 	    }
         av_frame_unref(frame);
     }
-    av_free_packet(&packet);
+    // av_free_packet(&packet);
+    av_packet_unref(&packet);
     
     return 0;
 }
@@ -1923,13 +1934,14 @@ void Do_Keyboard_Check(void)
 		            int64_t seekpos;
 		            int64_t seekdelta = 10 * 1000000L;  // -10 sec
 		            
-		            pts = gAudioCurrentPts;
+		            ppd = Playlist_GetData(gAudioCurrentPlaynum);
+		            pts = gAudioCurrentPts - ppd->start_time;
 		            if (pts < 3*1000*1000) {
 	                    Playlist_SetCurrentPlay(gAudioCurrentPlaynum);
 	                    Playlist_SetPreviousCurrentPlay();
 	                    ppd = Playlist_GetData(Playlist_GetCurrentPlay());
 	                    Stream_Restart(ppd->filename_w, 0);
-	                    seekpos = ppd->duration - seekdelta;
+	                    seekpos = ppd->start_time + ppd->duration - seekdelta;
 	                    if (seekpos < 0) seekpos = 0;
 	                    Stream_Seek(seekpos);
 	                    gAudioCurrentPlaynum = Playlist_GetCurrentPlay();
