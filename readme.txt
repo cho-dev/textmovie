@@ -2,7 +2,7 @@
 Contents of this package
 -------------------------------------------------------------------
 
-repository: https://github.com/cho-dev/textmovie.git
+repository: https://github.com/cho-dev/textmovie
 
 ######## Document
 how_to_build(jpn).txt  ===> How to build textmovie.exe (japanese)

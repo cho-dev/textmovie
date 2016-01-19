@@ -57,18 +57,18 @@ void AudioWave_SetWaveType(int waveType) {
 
 void AudioWave_NextSpectrumBase(void) {
     if (gAudioWaveType == AUDIOWAVE_SPECTRUM_TONE) {
-	    gAudioWaveSpectrumBase++;
-	    if (gAudioWaveSpectrumBase > 6)
-	        gAudioWaveSpectrumBase = 6;
-	}
+        gAudioWaveSpectrumBase++;
+        if (gAudioWaveSpectrumBase > 6)
+            gAudioWaveSpectrumBase = 6;
+    }
 }
 
 void AudioWave_PreviousSpectrumBase(void) {
     if (gAudioWaveType == AUDIOWAVE_SPECTRUM_TONE) {
-	    gAudioWaveSpectrumBase--;
-	    if (gAudioWaveSpectrumBase < 1)
-	        gAudioWaveSpectrumBase = 1;
-	}
+        gAudioWaveSpectrumBase--;
+        if (gAudioWaveSpectrumBase < 1)
+            gAudioWaveSpectrumBase = 1;
+    }
 }
 
 void AudioWave_SetSpectrumBase(int base) {
@@ -146,7 +146,7 @@ void AudioWave_Wave(TextScreenBitmap *wavebitmap, const int16_t *stream16buf, in
     TextScreen_PutCell(bitmap, 0, rpos, 'R');
     
     TextScreen_CopyBitmap(wavebitmap, bitmap, 0, 0);
-	TextScreen_FreeBitmap(bitmap);
+    TextScreen_FreeBitmap(bitmap);
 }
 
 void AudioWave_Circle(TextScreenBitmap *wavebitmap, const int16_t *stream16buf, int stream16len)
@@ -191,12 +191,12 @@ void AudioWave_Circle(TextScreenBitmap *wavebitmap, const int16_t *stream16buf, 
     TextScreen_PutCell(bitmap, rpos, ypos, 'R');
     
     TextScreen_CopyBitmap(wavebitmap, bitmap, 0, 0);
-	TextScreen_FreeBitmap(bitmap);
+    TextScreen_FreeBitmap(bitmap);
 }
 
 void AudioWave_ScrollPeak(TextScreenBitmap *wavebitmap, const int16_t *stream16buf, int stream16len)
 {
-	// show LR peak level scroll
+    // show LR peak level scroll
     int32_t sdat32;
     int lpos, rpos;
     static int lpeak, rpeak;
@@ -209,9 +209,9 @@ void AudioWave_ScrollPeak(TextScreenBitmap *wavebitmap, const int16_t *stream16b
     if (!bitmap) return;
     
     if (packetcount % interval == 0) {
-	    lpeak = 0;
-	    rpeak = 0;
-	}
+        lpeak = 0;
+        rpeak = 0;
+    }
     for (count = 0; count < stream16len; count++) {
         sdat32 = (int32_t)stream16buf[count];   // int16_t to int32_t to prevent overflow
         sdat32 = (sdat32 > 0) ? sdat32 : -sdat32;
@@ -224,8 +224,8 @@ void AudioWave_ScrollPeak(TextScreenBitmap *wavebitmap, const int16_t *stream16b
     
     if (packetcount % interval == (interval - 1)) {
         lpos = bitmap->height / 2 - 1;   // Left  draw x offset
-	    rpos = bitmap->height - 1;       // Right draw x offset
-	    
+        rpos = bitmap->height - 1;       // Right draw x offset
+        
         TextScreen_CopyBitmap(bitmap, wavebitmap, -1, 0);
         TextScreen_DrawLine(bitmap, bitmap->width - 1, 0, bitmap->width - 1, bitmap->height - 1, ' ');
         
@@ -247,22 +247,22 @@ void AudioWave_ScrollPeak(TextScreenBitmap *wavebitmap, const int16_t *stream16b
             TextScreen_DrawText(bitmap, 8, rpos, strbuf);
         }
         
-	    TextScreen_DrawLine(bitmap, bitmap->width - 1, lpos, bitmap->width - 1, lpos - bitmap->height * lpeak / 2 / 32768, '#');
-	    TextScreen_DrawLine(bitmap, bitmap->width - 1, rpos, bitmap->width - 1, rpos - bitmap->height * rpeak / 2 / 32768, '#');
-	    TextScreen_DrawText(bitmap, 0, lpos, "[L peak]");
-	    TextScreen_DrawText(bitmap, 0, rpos, "[R peak]");
+        TextScreen_DrawLine(bitmap, bitmap->width - 1, lpos, bitmap->width - 1, lpos - bitmap->height * lpeak / 2 / 32768, '#');
+        TextScreen_DrawLine(bitmap, bitmap->width - 1, rpos, bitmap->width - 1, rpos - bitmap->height * rpeak / 2 / 32768, '#');
+        TextScreen_DrawText(bitmap, 0, lpos, "[L peak]");
+        TextScreen_DrawText(bitmap, 0, rpos, "[R peak]");
     } else {
         TextScreen_CopyBitmap(bitmap, wavebitmap, 0, 0);
     }
     packetcount++;
     
     TextScreen_CopyBitmap(wavebitmap, bitmap, 0, 0);
-	TextScreen_FreeBitmap(bitmap);
+    TextScreen_FreeBitmap(bitmap);
 }
 
 void AudioWave_ScrollRms(TextScreenBitmap *wavebitmap, const int16_t *stream16buf, int stream16len)
 {
-	// show LR power level scroll
+    // show LR power level scroll
     int32_t sdat32;
     static int64_t rsum, lsum, sumcount;
     int rpowave, lpowave;
@@ -276,10 +276,10 @@ void AudioWave_ScrollRms(TextScreenBitmap *wavebitmap, const int16_t *stream16bu
     if (!bitmap) return;
     
     if (packetcount % interval == 0) {
-	    lsum = 0;
-	    rsum = 0;
-	    sumcount = 0;
-	}
+        lsum = 0;
+        rsum = 0;
+        sumcount = 0;
+    }
     for (count = 0; count < stream16len; count++) {
         sdat32 = (int32_t)stream16buf[count];   // int16_t to int32_t to prevent overflow
         sdat32 = (sdat32 > 0) ? sdat32 : -sdat32;
@@ -293,8 +293,8 @@ void AudioWave_ScrollRms(TextScreenBitmap *wavebitmap, const int16_t *stream16bu
     
     if (packetcount % interval == (interval - 1)) {
         lpos = bitmap->height / 2 - 1;   // Left  draw x offset
-	    rpos = bitmap->height - 1;       // Right draw x offset
-	    
+        rpos = bitmap->height - 1;       // Right draw x offset
+        
         TextScreen_CopyBitmap(bitmap, wavebitmap, -1, 0);
         TextScreen_DrawLine(bitmap, bitmap->width - 1, 0, bitmap->width - 1, bitmap->height - 1, ' ');
         
@@ -326,103 +326,103 @@ void AudioWave_ScrollRms(TextScreenBitmap *wavebitmap, const int16_t *stream16bu
         if (rpowave < 0) rpowave = 0;
         if (rpowave > 350) rpowave = 350;
         
-	    TextScreen_DrawLine(bitmap, bitmap->width - 1, lpos, bitmap->width - 1, lpos - bitmap->height * lpowave / 2 / 350, '#');
-	    TextScreen_DrawLine(bitmap, bitmap->width - 1, rpos, bitmap->width - 1, rpos - bitmap->height * rpowave / 2 / 350, '#');
-	    TextScreen_DrawText(bitmap, 0, lpos, "[L rms]");
-	    TextScreen_DrawText(bitmap, 0, rpos, "[R rms]");
+        TextScreen_DrawLine(bitmap, bitmap->width - 1, lpos, bitmap->width - 1, lpos - bitmap->height * lpowave / 2 / 350, '#');
+        TextScreen_DrawLine(bitmap, bitmap->width - 1, rpos, bitmap->width - 1, rpos - bitmap->height * rpowave / 2 / 350, '#');
+        TextScreen_DrawText(bitmap, 0, lpos, "[L rms]");
+        TextScreen_DrawText(bitmap, 0, rpos, "[R rms]");
     } else {
         TextScreen_CopyBitmap(bitmap, wavebitmap, 0, 0);
     }
     packetcount++;
     
     TextScreen_CopyBitmap(wavebitmap, bitmap, 0, 0);
-	TextScreen_FreeBitmap(bitmap);
+    TextScreen_FreeBitmap(bitmap);
 }
 
 void AudioWave_Spectrum(TextScreenBitmap *wavebitmap, const int16_t *stream16buf, int stream16len)
 {
-	// spectrum
+    // spectrum
     int32_t sdat32l, sdat32r;
     int64_t lpf[38], rpf[38], lpfd[38], rpfd[38];
-	static int64_t costable[FT_COSINETABLE_LENGTH] = {0};
-	int64_t freq, samplerate, count;
-	int i, n, lpos, rpos;
-	double freqd;
-	int64_t   costablelen, costablemask, costablelen4;
-	int64_t   countmaxa[38], countmax;
+    static int64_t costable[FT_COSINETABLE_LENGTH] = {0};
+    int64_t freq, samplerate, count;
+    int i, n, lpos, rpos;
+    double freqd;
+    int64_t   costablelen, costablemask, costablelen4;
+    int64_t   countmaxa[38], countmax;
     TextScreenBitmap *bitmap;
     
     bitmap = TextScreen_CreateBitmap(wavebitmap->width, wavebitmap->height);
     if (!bitmap) return;
-	
-	
-	samplerate = gAudioWaveSampleRate;
+    
+    
+    samplerate = gAudioWaveSampleRate;
     
     costablelen = FT_COSINETABLE_LENGTH;
     costablemask = costablelen - 1;
     costablelen4 = costablelen / 4;
     
-	if (!costable[10]) {  // make cosine table
-	    double t;
-	    int    i;
-	    for (i = 0; i < costablelen; i++) {
-	        t = 3.1415926 * 2 * i / costablelen;
-	        costable[i] = (int64_t)(-cos(t) * 32768);
-	    }
-	}
-	
-	// a[sample]*sin[(sample*f*costlen/samplerate)%costlen] if sintable is 0-255
-	// ( sample * f / sample * costlen ) % costlen
-	// 1:  f / sample * costlen
-	
-	n = 17;  // 63,88,125,176,250,353,500,707,1000,1414,2000,2828,4000,5656,8000,11313,16000
-	freqd = 62.5;
-	freq = 63;
-	//n = 37;  // 44,52,63,74,88,105,125,148,176,210,250,297,353,420,500,594,707,840,1000,
-	         //1189,1414,1681,2000,2378,2828,3363,4000,4756,5656,6727,8000,9513,11313,13454,16000,19027,22627
-	//freqd = 44.194174;
-	//freq = 44;
-	
-	//freq = (int64_t)freqd;
-	for (i = 0; i < n; i++ ) {
-	    int64_t k1, k2, k3;
-	    int  sample;
-	    
-	    lpf[i] = 0;
-	    rpf[i] = 0;
-	    lpfd[i] = 0;
-	    rpfd[i] = 0;
-	    k1 = (freq * costablelen * (1 << 16)) / samplerate;
-	    k2 = 0;
-	    countmax = samplerate * 10 / freq;
-	    if (countmax > (stream16len / 2)) {
-	        countmax = (stream16len / 2);
-	    }
-	    countmaxa[i] = countmax;
-	    if ((freq * 2) > gAudioWaveSampleRate) {
-	        continue;
-	    }
-	    
-	    //for (count = 0; count < stream16len; count+=2) {
-	    for (count = 0; count < (countmax * 2); count+=2) {
-	        sample = (count >> 1);
-	        sdat32l = (int32_t)stream16buf[count];
-	        sdat32r = (int32_t)stream16buf[count+1];
-	        //sdat32l = (sdat32l * (costable[sample] + 32768)) >> 16;  // hanning
-	        //sdat32r = (sdat32r * (costable[sample] + 32768)) >> 16;  // hanning
-	        sdat32l = (sdat32l * (costable[costablelen * sample / countmax] + 32768)) >> 16;  // hanning
-	        sdat32r = (sdat32r * (costable[costablelen * sample / countmax] + 32768)) >> 16;  // hanning
-	        k3 = k2 >> 16 ;
-	        lpf[i] += sdat32l * costable[k3 & costablemask];  // max (1<<15)*(1<<15)=(1<<30)
-	        lpfd[i] += sdat32l * costable[(costablelen4 + k3) & costablemask];
-	        rpf[i] += sdat32r * costable[k3 & costablemask];
-	        rpfd[i] += sdat32r * costable[(costablelen4 + k3) & costablemask];
-	        k2 += k1;
-	    }
-	    //freqd = freqd * 1.189207115;  // 1/4 oct
-	    freqd = freqd * 1.4142135624;  // 1/2 oct
-	    freq = (int64_t)freqd;
-	}
+    if (!costable[10]) {  // make cosine table
+        double t;
+        int    i;
+        for (i = 0; i < costablelen; i++) {
+            t = 3.1415926 * 2 * i / costablelen;
+            costable[i] = (int64_t)(-cos(t) * 32768);
+        }
+    }
+    
+    // a[sample]*sin[(sample*f*costlen/samplerate)%costlen] if sintable is 0-255
+    // ( sample * f / sample * costlen ) % costlen
+    // 1:  f / sample * costlen
+    
+    n = 17;  // 63,88,125,176,250,353,500,707,1000,1414,2000,2828,4000,5656,8000,11313,16000
+    freqd = 62.5;
+    freq = 63;
+    //n = 37;  // 44,52,63,74,88,105,125,148,176,210,250,297,353,420,500,594,707,840,1000,
+             //1189,1414,1681,2000,2378,2828,3363,4000,4756,5656,6727,8000,9513,11313,13454,16000,19027,22627
+    //freqd = 44.194174;
+    //freq = 44;
+    
+    //freq = (int64_t)freqd;
+    for (i = 0; i < n; i++ ) {
+        int64_t k1, k2, k3;
+        int  sample;
+        
+        lpf[i] = 0;
+        rpf[i] = 0;
+        lpfd[i] = 0;
+        rpfd[i] = 0;
+        k1 = (freq * costablelen * (1 << 16)) / samplerate;
+        k2 = 0;
+        countmax = samplerate * 10 / freq;
+        if (countmax > (stream16len / 2)) {
+            countmax = (stream16len / 2);
+        }
+        countmaxa[i] = countmax;
+        if ((freq * 2) > gAudioWaveSampleRate) {
+            continue;
+        }
+        
+        //for (count = 0; count < stream16len; count+=2) {
+        for (count = 0; count < (countmax * 2); count+=2) {
+            sample = (count >> 1);
+            sdat32l = (int32_t)stream16buf[count];
+            sdat32r = (int32_t)stream16buf[count+1];
+            //sdat32l = (sdat32l * (costable[sample] + 32768)) >> 16;  // hanning
+            //sdat32r = (sdat32r * (costable[sample] + 32768)) >> 16;  // hanning
+            sdat32l = (sdat32l * (costable[costablelen * sample / countmax] + 32768)) >> 16;  // hanning
+            sdat32r = (sdat32r * (costable[costablelen * sample / countmax] + 32768)) >> 16;  // hanning
+            k3 = k2 >> 16 ;
+            lpf[i] += sdat32l * costable[k3 & costablemask];  // max (1<<15)*(1<<15)=(1<<30)
+            lpfd[i] += sdat32l * costable[(costablelen4 + k3) & costablemask];
+            rpf[i] += sdat32r * costable[k3 & costablemask];
+            rpfd[i] += sdat32r * costable[(costablelen4 + k3) & costablemask];
+            k2 += k1;
+        }
+        //freqd = freqd * 1.189207115;  // 1/4 oct
+        freqd = freqd * 1.4142135624;  // 1/2 oct
+        freq = (int64_t)freqd;
+    }
     
     lpos = 1;
     rpos = bitmap->width / 2 + 1;
@@ -460,99 +460,99 @@ void AudioWave_Spectrum(TextScreenBitmap *wavebitmap, const int16_t *stream16buf
     TextScreen_DrawText(bitmap, rpos, bitmap->height - 1, "R [sqrt/log 63Hz-1kHz-16kHz]");
     
     TextScreen_CopyBitmap(wavebitmap, bitmap, 0, 0);
-	TextScreen_FreeBitmap(bitmap);
+    TextScreen_FreeBitmap(bitmap);
 }
 
 void AudioWave_SpectrumTone(TextScreenBitmap *wavebitmap, const int16_t *stream16buf, int stream16len)
 {
-	// doremi
+    // doremi
     int32_t sdat32l, sdat32r;
     int64_t lpf[128], lpfd[128];
     //int64_t rpf[60], rpfd[60];
-	static int64_t costable[FT_COSINETABLE_LENGTH] = {0};
-	static int64_t freq[128] = {0};
-	char *notename[12] = {"C.","C#","D.","D#","E.","F.","F#","G.","G#","A.","A#","B."};
-	int64_t samplerate, count;
-	int i, n;
-	double freqd;
-	int64_t   costablelen, costablemask, costablelen4;
-	int64_t   countmaxa[128], countmax;
+    static int64_t costable[FT_COSINETABLE_LENGTH] = {0};
+    static int64_t freq[128] = {0};
+    char *notename[12] = {"C.","C#","D.","D#","E.","F.","F#","G.","G#","A.","A#","B."};
+    int64_t samplerate, count;
+    int i, n;
+    double freqd;
+    int64_t   costablelen, costablemask, costablelen4;
+    int64_t   countmaxa[128], countmax;
     TextScreenBitmap *bitmap;
     
     bitmap = TextScreen_CreateBitmap(wavebitmap->width, wavebitmap->height);
     if (!bitmap) return;
     
     
-	samplerate = gAudioWaveSampleRate;
+    samplerate = gAudioWaveSampleRate;
     
     costablelen = FT_COSINETABLE_LENGTH;
     costablemask = costablelen - 1;
     costablelen4 = costablelen / 4;
     
-	if (!costable[10]) {  // make cosine table
-	    double t;
-	    int    i;
-	    for (i = 0; i < costablelen; i++) {
-	        t = 3.1415926 * 2 * i / costablelen;
-	        costable[i] = (int64_t)(-cos(t) * 32768);
-	    }
-	}
+    if (!costable[10]) {  // make cosine table
+        double t;
+        int    i;
+        for (i = 0; i < costablelen; i++) {
+            t = 3.1415926 * 2 * i / costablelen;
+            costable[i] = (int64_t)(-cos(t) * 32768);
+        }
+    }
     
-	//n = 37;
-	n = (bitmap->width - 2) / 2;
-	if (n >= 128) n = 128;
-	
-	// make note freq
-	if (!freq[0] || 1) {
-	    freqd = 32.70319566;
-	    for (i = 0; i < gAudioWaveSpectrumBase; i++) {
-	        freqd = freqd * 2;
-	    }
-	    //freqd = 130.812783;  // base = C2
-	    //freqd = 261.625566;  // base = C3
-	    //freqd = 523.251131;  // base = C4
-		for (i = 0; i < n; i++ ) {
-		    if ((int)freqd >= (samplerate / 2)) {
-		        n = i;
-		        break;
-		    } 
-		    freq[i] = (int64_t)freqd;
-		    freqd = freqd * 1.059463094359295;
-		}
-	}
-	
-	for (i = 0; i < n; i++ ) {
-	    int64_t k1, k2, k3;
-	    int  sample;
-	    
-	    lpf[i] = 0;
-	    //rpf[i] = 0;
-	    lpfd[i] = 0;
-	    //rpfd[i] = 0;
-	    k1 = (freq[i] * costablelen * (1 << 16)) / samplerate;
-	    k2 = 0;
-	    countmax = samplerate * 24 / freq[i];
-	    if (countmax > (stream16len / 2)) countmax = (stream16len / 2);
-	    countmaxa[i] = countmax;
-	    //for (count = 0; count < stream16len; count+=2) {
-	    for (count = 0; count < (countmax * 2); count+=2) {
-	        sample = (count >> 1);
-	        sdat32l = (int32_t)stream16buf[count];
-	        sdat32r = (int32_t)stream16buf[count+1];
-	        sdat32l = (sdat32l + sdat32r) / 2;
-	        //sdat32l = (sdat32l * (costable[sample] + 32768)) >> 16;  // hanning
-	        //sdat32r = (sdat32r * (costable[sample] + 32768)) >> 16;  // hanning
-	        sdat32l = (sdat32l * (costable[costablelen * sample / countmax] + 32768)) >> 16;  // hanning
-	        //sdat32l = (sdat32l * (32768)) >> 16;  // test (square)
-	        //sdat32r = (sdat32r * (costable[costablelen * sample / countmax] + 32768)) >> 16;  // hanning
-	        k3 = k2 >> 16 ;
-	        lpf[i] += sdat32l * costable[k3 & costablemask];  // max (1<<15)*(1<<15)=(1<<30)
-	        lpfd[i] += sdat32l * costable[(costablelen4 + k3) & costablemask];
-	        //rpf[i] += sdat32r * costable[k3 & costablemask];
-	        //rpfd[i] += sdat32r * costable[(costablelen4 + k3) & costablemask];
-	        k2 += k1;
-	    }
-	}
+    //n = 37;
+    n = (bitmap->width - 2) / 2;
+    if (n >= 128) n = 128;
+    
+    // make note freq
+    if (!freq[0] || 1) {
+        freqd = 32.70319566;
+        for (i = 0; i < gAudioWaveSpectrumBase; i++) {
+            freqd = freqd * 2;
+        }
+        //freqd = 130.812783;  // base = C2
+        //freqd = 261.625566;  // base = C3
+        //freqd = 523.251131;  // base = C4
+        for (i = 0; i < n; i++ ) {
+            if ((int)freqd >= (samplerate / 2)) {
+                n = i;
+                break;
+            } 
+            freq[i] = (int64_t)freqd;
+            freqd = freqd * 1.059463094359295;
+        }
+    }
+    
+    for (i = 0; i < n; i++ ) {
+        int64_t k1, k2, k3;
+        int  sample;
+        
+        lpf[i] = 0;
+        //rpf[i] = 0;
+        lpfd[i] = 0;
+        //rpfd[i] = 0;
+        k1 = (freq[i] * costablelen * (1 << 16)) / samplerate;
+        k2 = 0;
+        countmax = samplerate * 24 / freq[i];
+        if (countmax > (stream16len / 2)) countmax = (stream16len / 2);
+        countmaxa[i] = countmax;
+        //for (count = 0; count < stream16len; count+=2) {
+        for (count = 0; count < (countmax * 2); count+=2) {
+            sample = (count >> 1);
+            sdat32l = (int32_t)stream16buf[count];
+            sdat32r = (int32_t)stream16buf[count+1];
+            sdat32l = (sdat32l + sdat32r) / 2;
+            //sdat32l = (sdat32l * (costable[sample] + 32768)) >> 16;  // hanning
+            //sdat32r = (sdat32r * (costable[sample] + 32768)) >> 16;  // hanning
+            sdat32l = (sdat32l * (costable[costablelen * sample / countmax] + 32768)) >> 16;  // hanning
+            //sdat32l = (sdat32l * (32768)) >> 16;  // test (square)
+            //sdat32r = (sdat32r * (costable[costablelen * sample / countmax] + 32768)) >> 16;  // hanning
+            k3 = k2 >> 16 ;
+            lpf[i] += sdat32l * costable[k3 & costablemask];  // max (1<<15)*(1<<15)=(1<<30)
+            lpfd[i] += sdat32l * costable[(costablelen4 + k3) & costablemask];
+            //rpf[i] += sdat32r * costable[k3 & costablemask];
+            //rpfd[i] += sdat32r * costable[(costablelen4 + k3) & costablemask];
+            k2 += k1;
+        }
+    }
     
     for (i = 0; i < n; i++) {
         int linelen;
@@ -588,16 +588,16 @@ void AudioWave_SpectrumTone(TextScreenBitmap *wavebitmap, const int16_t *stream1
         int  j = 0;
         while (j * 12 < n) {
             if (j) {
-	            snprintf(strbuf, sizeof(strbuf), "C%d", gAudioWaveSpectrumBase + j);
-	        } else {
-	            snprintf(strbuf, sizeof(strbuf), "C%d(%dHz)", gAudioWaveSpectrumBase + j, (int)freq[j * 12]);
-	        }
-	        TextScreen_DrawText(bitmap, 1 + (j * 24), bitmap->height - 1, strbuf);
-	        j++;
-	    }
+                snprintf(strbuf, sizeof(strbuf), "C%d", gAudioWaveSpectrumBase + j);
+            } else {
+                snprintf(strbuf, sizeof(strbuf), "C%d(%dHz)", gAudioWaveSpectrumBase + j, (int)freq[j * 12]);
+            }
+            TextScreen_DrawText(bitmap, 1 + (j * 24), bitmap->height - 1, strbuf);
+            j++;
+        }
     }
     
     TextScreen_CopyBitmap(wavebitmap, bitmap, 0, 0);
-	TextScreen_FreeBitmap(bitmap);
+    TextScreen_FreeBitmap(bitmap);
 }
 

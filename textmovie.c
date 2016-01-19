@@ -191,29 +191,29 @@ void Clear_Cuedata(int type)
     
     switch (type) {
         case FRAMEBUFFER_TYPE_AUDIO:
-			while(Framebuffer_ListNum(FRAMEBUFFER_TYPE_AUDIO)) {
-			    buf = Framebuffer_Get(FRAMEBUFFER_TYPE_AUDIO);
-			    Framebuffer_Free(buf);
-			}
+            while(Framebuffer_ListNum(FRAMEBUFFER_TYPE_AUDIO)) {
+                buf = Framebuffer_Get(FRAMEBUFFER_TYPE_AUDIO);
+                Framebuffer_Free(buf);
+            }
             break;
         case FRAMEBUFFER_TYPE_VIDEO:
-			while(Framebuffer_ListNum(FRAMEBUFFER_TYPE_VIDEO)) {
-			    buf = Framebuffer_Get(FRAMEBUFFER_TYPE_VIDEO);
-			    TextScreen_FreeBitmap((TextScreenBitmap *)buf->data);
-			    Framebuffer_Free(buf);
-			}
+            while(Framebuffer_ListNum(FRAMEBUFFER_TYPE_VIDEO)) {
+                buf = Framebuffer_Get(FRAMEBUFFER_TYPE_VIDEO);
+                TextScreen_FreeBitmap((TextScreenBitmap *)buf->data);
+                Framebuffer_Free(buf);
+            }
             break;
         case FRAMEBUFFER_TYPE_VOID:
-			while(Framebuffer_ListNum(FRAMEBUFFER_TYPE_VOID)) {
-			    buf = Framebuffer_Get(FRAMEBUFFER_TYPE_VOID);
-			    Framebuffer_Free(buf);
-			}
+            while(Framebuffer_ListNum(FRAMEBUFFER_TYPE_VOID)) {
+                buf = Framebuffer_Get(FRAMEBUFFER_TYPE_VOID);
+                Framebuffer_Free(buf);
+            }
             break;
         case FRAMEBUFFER_TYPE_AUDIOWAVE:
-			while(Framebuffer_ListNum(FRAMEBUFFER_TYPE_AUDIOWAVE)) {
-			    buf = Framebuffer_Get(FRAMEBUFFER_TYPE_AUDIOWAVE);
-			    Framebuffer_Free(buf);
-			}
+            while(Framebuffer_ListNum(FRAMEBUFFER_TYPE_AUDIOWAVE)) {
+                buf = Framebuffer_Get(FRAMEBUFFER_TYPE_AUDIOWAVE);
+                Framebuffer_Free(buf);
+            }
             break;
         default:
             break;
@@ -348,55 +348,55 @@ int isMediaFile(const wchar_t *filename, MediaInfo *minfo)
         av_log(NULL, AV_LOG_ERROR, "Cannot find a video stream in the input file\n");
     } else {
         stream_index = ret;
-	    ldec_ctx = lfmt_ctx->streams[stream_index]->codec;
-	    av_opt_set_int(ldec_ctx, "refcounted_frames", 1, 0);
-	    
-	    if ((ret = avcodec_open2(ldec_ctx, dec, NULL)) < 0) {
-	        av_log(NULL, AV_LOG_ERROR, "Cannot open video decoder\n");
-	    } else {
-	        isVideo = 1;
-	        minfo->video = 1;
-	        minfo->video_codec_id = ldec_ctx->codec_id;
-	        // 100000 = AV_TIME_BASE / 10
-	        if ((ldec_ctx->codec_id == AV_CODEC_ID_MJPEG) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
-	        if ((ldec_ctx->codec_id == AV_CODEC_ID_PNG) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
-	        if ((ldec_ctx->codec_id == AV_CODEC_ID_BMP) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
-	        if ((ldec_ctx->codec_id == AV_CODEC_ID_WEBP) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
-	        if ((ldec_ctx->codec_id == AV_CODEC_ID_TIFF) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
-	        if ((ldec_ctx->codec_id == AV_CODEC_ID_TARGA) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
-	        if ((ldec_ctx->codec_id == AV_CODEC_ID_GIF) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
-	        if ((ldec_ctx->codec_id == AV_CODEC_ID_JPEG2000) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
-	        if (ldec_ctx->codec_id == AV_CODEC_ID_ANSI) isVideo = 0;
-	        if ((ldec_ctx->codec_id >= AV_CODEC_ID_FIRST_SUBTITLE) && (ldec_ctx->codec_id < AV_CODEC_ID_PROBE)) isVideo = 0;
-	        
-	        minfo->video_avg_frame_rate_den = lfmt_ctx->streams[stream_index]->avg_frame_rate.den;
+        ldec_ctx = lfmt_ctx->streams[stream_index]->codec;
+        av_opt_set_int(ldec_ctx, "refcounted_frames", 1, 0);
+        
+        if ((ret = avcodec_open2(ldec_ctx, dec, NULL)) < 0) {
+            av_log(NULL, AV_LOG_ERROR, "Cannot open video decoder\n");
+        } else {
+            isVideo = 1;
+            minfo->video = 1;
+            minfo->video_codec_id = ldec_ctx->codec_id;
+            // 100000 = AV_TIME_BASE / 10
+            if ((ldec_ctx->codec_id == AV_CODEC_ID_MJPEG) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
+            if ((ldec_ctx->codec_id == AV_CODEC_ID_PNG) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
+            if ((ldec_ctx->codec_id == AV_CODEC_ID_BMP) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
+            if ((ldec_ctx->codec_id == AV_CODEC_ID_WEBP) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
+            if ((ldec_ctx->codec_id == AV_CODEC_ID_TIFF) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
+            if ((ldec_ctx->codec_id == AV_CODEC_ID_TARGA) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
+            if ((ldec_ctx->codec_id == AV_CODEC_ID_GIF) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
+            if ((ldec_ctx->codec_id == AV_CODEC_ID_JPEG2000) && (lfmt_ctx->duration <= 100000)) isVideo = 0;
+            if (ldec_ctx->codec_id == AV_CODEC_ID_ANSI) isVideo = 0;
+            if ((ldec_ctx->codec_id >= AV_CODEC_ID_FIRST_SUBTITLE) && (ldec_ctx->codec_id < AV_CODEC_ID_PROBE)) isVideo = 0;
+            
+            minfo->video_avg_frame_rate_den = lfmt_ctx->streams[stream_index]->avg_frame_rate.den;
             minfo->video_avg_frame_rate_num = lfmt_ctx->streams[stream_index]->avg_frame_rate.num;
-	        
+            
             avcodec_close(ldec_ctx);
-	    }
-	}
+        }
+    }
     
     // find audio stream
     if ((ret = av_find_best_stream(lfmt_ctx, AVMEDIA_TYPE_AUDIO, -1, -1, &dec, 0)) < 0) {
         av_log(NULL, AV_LOG_ERROR, "Cannot find a audio stream in the input file\n");
     } else {
         stream_index = ret;
-	    ladec_ctx = lfmt_ctx->streams[stream_index]->codec;
-	    av_opt_set_int(ladec_ctx, "refcounted_frames", 1, 0);
-	    
-	    if ((ret = avcodec_open2(ladec_ctx, dec, NULL)) < 0) {
-	        av_log(NULL, AV_LOG_ERROR, "Cannot open audio decoder\n");
-	    } else {
-	        AVDictionary      *dic;
-	        AVDictionaryEntry *tag = NULL;
-	        uint32_t edelay, zeropad;
-	        uint64_t length;
-	        AVRational  timebase;
-	        
-	        isAudio = 1;
-	        minfo->audio = 1;
-	        minfo->audio_codec_id = ladec_ctx->codec_id;
-	        minfo->audio_sample_rate = ladec_ctx->sample_rate;
+        ladec_ctx = lfmt_ctx->streams[stream_index]->codec;
+        av_opt_set_int(ladec_ctx, "refcounted_frames", 1, 0);
+        
+        if ((ret = avcodec_open2(ladec_ctx, dec, NULL)) < 0) {
+            av_log(NULL, AV_LOG_ERROR, "Cannot open audio decoder\n");
+        } else {
+            AVDictionary      *dic;
+            AVDictionaryEntry *tag = NULL;
+            uint32_t edelay, zeropad;
+            uint64_t length;
+            AVRational  timebase;
+            
+            isAudio = 1;
+            minfo->audio = 1;
+            minfo->audio_codec_id = ladec_ctx->codec_id;
+            minfo->audio_sample_rate = ladec_ctx->sample_rate;
             timebase = lfmt_ctx->streams[stream_index]->time_base;
             if (timebase.num) {
                 minfo->audio_timebase = timebase.den / timebase.num;
@@ -420,8 +420,8 @@ int isMediaFile(const wchar_t *filename, MediaInfo *minfo)
             avcodec_close(ladec_ctx);
             //printf("timebase=%d,smpb=%d,edelay=%d,zeropad=%d,length=%d\n", minfo->audio_timebase, minfo->audio_itunsmpb,
             //                            (int)minfo->audio_smpb_edelay, (int)minfo->audio_smpb_zeropad, (int)minfo->audio_smpb_length);
-	    }
-	}
+        }
+    }
     avformat_close_input(&lfmt_ctx);
     
     return (isAudio || isVideo);
@@ -519,14 +519,14 @@ int AudioStream_OpenFile(const wchar_t *filename)
 int Stream_OpenFile(const wchar_t *filename)
 {
     if (video_stream_index != -1) {
-	    avcodec_close(dec_ctx);
-	    avformat_close_input(&fmt_ctx);
-	    video_stream_index = -1;
+        avcodec_close(dec_ctx);
+        avformat_close_input(&fmt_ctx);
+        video_stream_index = -1;
     }
     if (audio_stream_index != -1) {
-	    avcodec_close(adec_ctx);
-	    avformat_close_input(&afmt_ctx);
-	    audio_stream_index = -1;
+        avcodec_close(adec_ctx);
+        avformat_close_input(&afmt_ctx);
+        audio_stream_index = -1;
     }
     
     gReadDoneAudio = 0;
@@ -721,21 +721,21 @@ void Stream_Seek(int64_t delta)
         //avformat_seek_file(afmt_ctx, audio_stream_index, seek_min, seek_target, seek_max, flags);
         avformat_seek_file(afmt_ctx, -1, seek_min, seek_target, seek_max, flags);
         SDL_LockAudio();
-		while(Framebuffer_ListNum(FRAMEBUFFER_TYPE_AUDIO)) {
-		    buf = Framebuffer_Get(FRAMEBUFFER_TYPE_AUDIO);
-		    Framebuffer_Free(buf);
-		}
-		SDL_UnlockAudio();
+        while(Framebuffer_ListNum(FRAMEBUFFER_TYPE_AUDIO)) {
+            buf = Framebuffer_Get(FRAMEBUFFER_TYPE_AUDIO);
+            Framebuffer_Free(buf);
+        }
+        SDL_UnlockAudio();
         SDL_PauseAudio(0);
     }
     if (video_stream_index != -1) {
         //avformat_seek_file(fmt_ctx, video_stream_index, seek_min, seek_target, seek_max, flags);
         avformat_seek_file(fmt_ctx, -1, seek_min, seek_target, seek_max, flags);
-		while(Framebuffer_ListNum(FRAMEBUFFER_TYPE_VIDEO)) {
-		    buf = Framebuffer_Get(FRAMEBUFFER_TYPE_VIDEO);
-		    TextScreen_FreeBitmap((TextScreenBitmap *)buf->data);
-		    Framebuffer_Free(buf);
-		}
+        while(Framebuffer_ListNum(FRAMEBUFFER_TYPE_VIDEO)) {
+            buf = Framebuffer_Get(FRAMEBUFFER_TYPE_VIDEO);
+            TextScreen_FreeBitmap((TextScreenBitmap *)buf->data);
+            Framebuffer_Free(buf);
+        }
     }
     gStartTime = gStartTime - delta;
     gSeeked = 1;
@@ -763,9 +763,9 @@ void AudioStream_VolumeAdjust(int16_t *stream16buf, int stream16len)
         }
         stream16buf[count] = (int16_t)sdat32;
         
-	    // check peak level
-	    sdat32 = (sdat32 >= 0) ? sdat32: -sdat32;
-	    if (sdat32 > gAudioLevel) gAudioLevel = sdat32;
+        // check peak level
+        sdat32 = (sdat32 >= 0) ? sdat32: -sdat32;
+        if (sdat32 > gAudioLevel) gAudioLevel = sdat32;
     }
 }
 
@@ -804,49 +804,49 @@ static void AudioStream_SDLCallback(void *userdata, uint8_t *stream, int len)
     
     while (count < stream16len) {
         if (!gPause) {
-	        abuf = Framebuffer_GetNoRemove(FRAMEBUFFER_TYPE_AUDIO);
-	    }
-	    if (abuf) {
-	        if (diffcheck) {
-	            // 48000Hz, 2ch, 16bit  ->  pts delay = (data byte) * 1000000 / 48000 / 4
-	            CheckClockDifference(abuf->pts + ((int64_t)abuf->pos * 1000000L / (int64_t)gSampleRate / 4));
-	            diffcheck = 0;
-	        }
-	        gAudioCurrentPts = abuf->pts + ((int64_t)abuf->pos * 1000000L / (int64_t)gSampleRate / 4);
-	        gAudioCurrentPlaynum = abuf->playnum;
-	        
-	        data = (int16_t *)abuf->data;
-	        pos = abuf->pos;
-	        while ((pos < abuf->size) && (count < stream16len)) {
-	            *(stream16buf + count) = data[(pos/2)];
-	            count++;
-	            pos += 2;
-	        }
-	        if (pos >= abuf->size) {
-	            abuf = Framebuffer_Get(FRAMEBUFFER_TYPE_AUDIO);
-	            Framebuffer_Free(abuf);
-	            abuf = NULL;
-	        }
-	    } else {
-	        if (!gPause) {
-		        gAudioCurrentPts = (int64_t)GetTickCount()*1000 - gStartTime;
-		        gAudioCurrentPlaynum = Playlist_GetCurrentPlay();
-		    }
-	        
-	        while (count < stream16len) {
-	            *(stream16buf + count) = 0;
-	            count++;
-	        }
-	    }
-	}
-	
-	if (abuf) {
-	    abuf->pos = pos;
-	}
-	
-	AudioStream_VolumeAdjust(stream16buf, stream16len);  // volume adjust
-	
-	// copy audio data to buffer for draw wave
+            abuf = Framebuffer_GetNoRemove(FRAMEBUFFER_TYPE_AUDIO);
+        }
+        if (abuf) {
+            if (diffcheck) {
+                // 48000Hz, 2ch, 16bit  ->  pts delay = (data byte) * 1000000 / 48000 / 4
+                CheckClockDifference(abuf->pts + ((int64_t)abuf->pos * 1000000L / (int64_t)gSampleRate / 4));
+                diffcheck = 0;
+            }
+            gAudioCurrentPts = abuf->pts + ((int64_t)abuf->pos * 1000000L / (int64_t)gSampleRate / 4);
+            gAudioCurrentPlaynum = abuf->playnum;
+            
+            data = (int16_t *)abuf->data;
+            pos = abuf->pos;
+            while ((pos < abuf->size) && (count < stream16len)) {
+                *(stream16buf + count) = data[(pos/2)];
+                count++;
+                pos += 2;
+            }
+            if (pos >= abuf->size) {
+                abuf = Framebuffer_Get(FRAMEBUFFER_TYPE_AUDIO);
+                Framebuffer_Free(abuf);
+                abuf = NULL;
+            }
+        } else {
+            if (!gPause) {
+                gAudioCurrentPts = (int64_t)GetTickCount()*1000 - gStartTime;
+                gAudioCurrentPlaynum = Playlist_GetCurrentPlay();
+            }
+            
+            while (count < stream16len) {
+                *(stream16buf + count) = 0;
+                count++;
+            }
+        }
+    }
+    
+    if (abuf) {
+        abuf->pos = pos;
+    }
+    
+    AudioStream_VolumeAdjust(stream16buf, stream16len);  // volume adjust
+    
+    // copy audio data to buffer for draw wave
     abuf = Framebuffer_New(stream16len * 2, 0);
     if (abuf) {
         data = (int16_t *)abuf->data;
@@ -858,8 +858,8 @@ static void AudioStream_SDLCallback(void *userdata, uint8_t *stream, int len)
             Framebuffer_Free(abuf);
         }
     }
-	
-	memcpy(stream, stream16buf, len);
+    
+    memcpy(stream, stream16buf, len);
     free(stream16buf);
     
     //gCallDiff = GetTickCount() - gCallPrevTime; // for test
@@ -869,32 +869,32 @@ static void exit_proc(void)
 {
     gQuitFlag = 1;
     
-	// close SDL
-	SDL_PauseAudio(1);
+    // close SDL
+    SDL_PauseAudio(1);
     SDL_CloseAudio();
     SDL_Quit();
     
-	// Thread destroy
-	pthread_join(gAudioWaveTid , NULL );
-	MUTEX_DESTROY(gMutexBitmapWave);
-	
-	// free all cue data
+    // Thread destroy
+    pthread_join(gAudioWaveTid , NULL );
+    MUTEX_DESTROY(gMutexBitmapWave);
+    
+    // free all cue data
     Clear_Cuedata(FRAMEBUFFER_TYPE_AUDIO);
     Clear_Cuedata(FRAMEBUFFER_TYPE_VIDEO);
     Clear_Cuedata(FRAMEBUFFER_TYPE_VOID);
     Clear_Cuedata(FRAMEBUFFER_TYPE_AUDIOWAVE);
     
     Framebuffer_Uninit();
-	
-	Playlist_ClearList();
-	
-	// free text bitmap
+    
+    Playlist_ClearList();
+    
+    // free text bitmap
     TextScreen_FreeBitmap(gBitmap);
     TextScreen_FreeBitmap(gBitmapWave);
     if (gBitmapClip) TextScreen_FreeBitmap(gBitmapClip);
     if (gBitmapList) TextScreen_FreeBitmap(gBitmapList);
     if (gBitmapLastVideo) TextScreen_FreeBitmap(gBitmapLastVideo);
-	
+    
     // free audio, video context
     avfilter_graph_free(&filter_graph);
     avcodec_close(dec_ctx);
@@ -953,24 +953,24 @@ int AudioStream_ReadAndBuffer(void)
     if (gSeeked) {
         PlaylistData *ppd;
         
-	    ignore_audio = 4;
+        ignore_audio = 4;
         ppd = Playlist_GetData( Playlist_GetCurrentPlay() );
         if (ppd) {
-	        if (ppd->audio_codec_id == AV_CODEC_ID_WMALOSSLESS) { // avoid noise (decode bug ?)
-	            ignore_audio = 24;
-	        }
-	    }
+            if (ppd->audio_codec_id == AV_CODEC_ID_WMALOSSLESS) { // avoid noise (decode bug ?)
+                ignore_audio = 24;
+            }
+        }
     }
     
     if (isFramebuffer_Full(FRAMEBUFFER_TYPE_AUDIO)) return 0;
     
     if (!apacket0.data) {
-	    if ((ret = av_read_frame(afmt_ctx, &apacket)) < 0) {
-	        return -1;
-	    } else {
-	        apacket0 = apacket;
-	        ptsoffset = 0;
-	    }
+        if ((ret = av_read_frame(afmt_ctx, &apacket)) < 0) {
+            return -1;
+        } else {
+            apacket0 = apacket;
+            ptsoffset = 0;
+        }
     }
     
     if (apacket.stream_index == audio_stream_index) {
@@ -1006,12 +1006,12 @@ int AudioStream_ReadAndBuffer(void)
         }
         
         while (1) {
-	        int         samples;
-	        int16_t     *p;
-	        Framebuffer *abuf;
-	        int16_t     *data;
-	        int         i;
-	        
+            int         samples;
+            int16_t     *p;
+            Framebuffer *abuf;
+            int16_t     *data;
+            int         i;
+            
             ret = av_buffersink_get_frame(abuffersink_ctx, afilter_frame);
             
             if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
@@ -1025,94 +1025,94 @@ int AudioStream_ReadAndBuffer(void)
                 return -1;
             }
             
-	        afilter_frame->pts = av_frame_get_best_effort_timestamp(afilter_frame);
-	        // time_base = abuffersink_ctx->inputs[0]->time_base;
-	        time_base = afmt_ctx->streams[audio_stream_index]->time_base;
-	        pts_time = av_rescale_q(afilter_frame->pts, time_base, AV_TIME_BASE_Q) + ptsoffset;
-	        
-	        //samples = afilter_frame->nb_samples * 
-	        //                av_get_channel_layout_nb_channels(av_frame_get_channel_layout(afilter_frame));
-	        samples = afilter_frame->nb_samples * 2;
-	        p = (int16_t *)afilter_frame->data[0];
-	        
-			ptsoffset += (int64_t)(samples / 2) * 1000000L / (int64_t)gSampleRate;
-	        
-	        if (gDebugDecode) {
-		        //TextScreen_Wait(100);
-	            gStartTime = (int64_t)GetTickCount()*1000 - pts_time;
-	            printf("AudioBuffer:time=%d.%03d:pts=%"PRId64":TB=%d/%d:sample=%d:ch=%d\n", 
-	                                (int)(pts_time / 1000000), (int)((pts_time % 1000000) / 1000), 
-	                                afilter_frame->pts, time_base.num, time_base.den,
-	                                samples, av_get_channel_layout_nb_channels(av_frame_get_channel_layout(afilter_frame)));
-	        } else {  // make audio cue data
-	            if (ignore_audio) {
-	                ignore_audio--;
-	            } else {
-	                {  // experimental 20150305 gapless play test (for iTunSMPB tag):
-			            PlaylistData *pd;
-			            int64_t  sample48len;
-			            int64_t  currentsample;
-			            int64_t  resample_comp;
-			            
-			            pd = NULL;
-			            if (Playlist_GetCurrentPlay() != -1) {
-			                pd = Playlist_GetData(Playlist_GetCurrentPlay());
-			                //if (pd->audio_itunsmpb && !(pd->video)) {
-			                if (pd->audio_itunsmpb) {
-			                    resample_comp = 0;
-			                    if (pd->audio_sample_rate != gSampleRate) {  // compensation for resample
-			                        resample_comp = 16;
-			                    }
-			                    // +edelay for compare pts (currentsample)
-			                    sample48len = ((int64_t)pd->audio_smpb_length + (int64_t)pd->audio_smpb_edelay + resample_comp)
-			                                     * gSampleRate / pd->audio_sample_rate;
-			                    //sample48len = ((int64_t)pd->audio_smpb_length) * gSampleRate / pd->audio_sample_rate;
-			                    currentsample = pts_time * gSampleRate / 1000000;
-			                    //printf("%d:%d ",(int)currentsample, (int)sample48len);
-			                    if (currentsample + (samples / 2) > sample48len) {
-			                        samples = (sample48len - currentsample - 1) * 2;
-			                        if (samples < 0) samples = 0;
-			                        // printf("s=%d   ", samples);
-			                    }
-			                }
-			            }
-			        }
-		            
-		            if (samples) {
-				        abuf = Framebuffer_New(samples * 2, 0);
-				        if (abuf) {
-				            
-				            data = (int16_t *)abuf->data;
-				            abuf->pts = pts_time;
-				            abuf->type = FRAMEBUFFER_TYPE_AUDIO;
-				            abuf->flags = 0;
-				            abuf->playnum = Playlist_GetCurrentPlay();
-					        for (i = 0; i < samples; i++) {
-					            data[i] = *p;
-					            /*
-					            if((i == 0) || (i == 1)) {  // test marker
-					                data[i] = 10000;
-					            }
-					            */
-					            p++;
-					        }
-					        
-					        SDL_LockAudio();
-					        Framebuffer_Put(abuf);
-					        SDL_UnlockAudio();
-					    }
-					}
-			    }
-			}
+            afilter_frame->pts = av_frame_get_best_effort_timestamp(afilter_frame);
+            // time_base = abuffersink_ctx->inputs[0]->time_base;
+            time_base = afmt_ctx->streams[audio_stream_index]->time_base;
+            pts_time = av_rescale_q(afilter_frame->pts, time_base, AV_TIME_BASE_Q) + ptsoffset;
+            
+            //samples = afilter_frame->nb_samples * 
+            //                av_get_channel_layout_nb_channels(av_frame_get_channel_layout(afilter_frame));
+            samples = afilter_frame->nb_samples * 2;
+            p = (int16_t *)afilter_frame->data[0];
+            
+            ptsoffset += (int64_t)(samples / 2) * 1000000L / (int64_t)gSampleRate;
+            
+            if (gDebugDecode) {
+                //TextScreen_Wait(100);
+                gStartTime = (int64_t)GetTickCount()*1000 - pts_time;
+                printf("AudioBuffer:time=%d.%03d:pts=%"PRId64":TB=%d/%d:sample=%d:ch=%d\n", 
+                                    (int)(pts_time / 1000000), (int)((pts_time % 1000000) / 1000), 
+                                    afilter_frame->pts, time_base.num, time_base.den,
+                                    samples, av_get_channel_layout_nb_channels(av_frame_get_channel_layout(afilter_frame)));
+            } else {  // make audio cue data
+                if (ignore_audio) {
+                    ignore_audio--;
+                } else {
+                    {  // experimental 20150305 gapless play test (for iTunSMPB tag):
+                        PlaylistData *pd;
+                        int64_t  sample48len;
+                        int64_t  currentsample;
+                        int64_t  resample_comp;
+                        
+                        pd = NULL;
+                        if (Playlist_GetCurrentPlay() != -1) {
+                            pd = Playlist_GetData(Playlist_GetCurrentPlay());
+                            //if (pd->audio_itunsmpb && !(pd->video)) {
+                            if (pd->audio_itunsmpb) {
+                                resample_comp = 0;
+                                if (pd->audio_sample_rate != gSampleRate) {  // compensation for resample
+                                    resample_comp = 16;
+                                }
+                                // +edelay for compare pts (currentsample)
+                                sample48len = ((int64_t)pd->audio_smpb_length + (int64_t)pd->audio_smpb_edelay + resample_comp)
+                                                 * gSampleRate / pd->audio_sample_rate;
+                                //sample48len = ((int64_t)pd->audio_smpb_length) * gSampleRate / pd->audio_sample_rate;
+                                currentsample = pts_time * gSampleRate / 1000000;
+                                //printf("%d:%d ",(int)currentsample, (int)sample48len);
+                                if (currentsample + (samples / 2) > sample48len) {
+                                    samples = (sample48len - currentsample - 1) * 2;
+                                    if (samples < 0) samples = 0;
+                                    // printf("s=%d   ", samples);
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (samples) {
+                        abuf = Framebuffer_New(samples * 2, 0);
+                        if (abuf) {
+                            
+                            data = (int16_t *)abuf->data;
+                            abuf->pts = pts_time;
+                            abuf->type = FRAMEBUFFER_TYPE_AUDIO;
+                            abuf->flags = 0;
+                            abuf->playnum = Playlist_GetCurrentPlay();
+                            for (i = 0; i < samples; i++) {
+                                data[i] = *p;
+                                /*
+                                if((i == 0) || (i == 1)) {  // test marker
+                                    data[i] = 10000;
+                                }
+                                */
+                                p++;
+                            }
+                            
+                            SDL_LockAudio();
+                            Framebuffer_Put(abuf);
+                            SDL_UnlockAudio();
+                        }
+                    }
+                }
+            }
             av_frame_unref(afilter_frame);
         }
         av_frame_unref(aframe);
         
-	    if (apacket.size <= 0) {
-	        // av_free_packet(&apacket0);
-	        av_packet_unref(&apacket0);
-	        apacket0.data = NULL;
-	    }
+        if (apacket.size <= 0) {
+            // av_free_packet(&apacket0);
+            av_packet_unref(&apacket0);
+            apacket0.data = NULL;
+        }
     } else {
         // av_free_packet(&apacket0);
         av_packet_unref(&apacket0);
@@ -1154,17 +1154,17 @@ int VideoStream_ReadAndBuffer(void)
         decodecount = 64;
         
         while(!got_frame && decodecount--) {  // experimental 20150321 for PNG decode
-	        ret = avcodec_decode_video2(dec_ctx, frame, &got_frame, &packet);
-	        if (ret < 0) {
-	            av_log(NULL, AV_LOG_ERROR, "Error decoding video\n");
-	            // av_free_packet(&packet);
-	            av_packet_unref(&packet);
-	            if (ret == AVERROR_INVALIDDATA) {
-	                return 0;
-	            } else {
-	                return -1;
-	            }
-	        }
+            ret = avcodec_decode_video2(dec_ctx, frame, &got_frame, &packet);
+            if (ret < 0) {
+                av_log(NULL, AV_LOG_ERROR, "Error decoding video\n");
+                // av_free_packet(&packet);
+                av_packet_unref(&packet);
+                if (ret == AVERROR_INVALIDDATA) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            }
         }
         
         if (!got_frame) {
@@ -1180,12 +1180,12 @@ int VideoStream_ReadAndBuffer(void)
         }
         
         while (1) {
-			uint8_t *p0, *p;
-			int x, y;
-	        TextScreenBitmap *tmp;
-	        Framebuffer *vbuf;
-			
-	        ret = av_buffersink_get_frame(buffersink_ctx, filter_frame);
+            uint8_t *p0, *p;
+            int x, y;
+            TextScreenBitmap *tmp;
+            Framebuffer *vbuf;
+            
+            ret = av_buffersink_get_frame(buffersink_ctx, filter_frame);
 
             if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
                 av_frame_unref(filter_frame);
@@ -1199,56 +1199,56 @@ int VideoStream_ReadAndBuffer(void)
                 return -1;
             }
             
-	        filter_frame->pts = av_frame_get_best_effort_timestamp(filter_frame);
-	        time_base = buffersink_ctx->inputs[0]->time_base;
-	        pts_time = av_rescale_q(filter_frame->pts, time_base, AV_TIME_BASE_Q);
-	        // printf("pts_time:%"PRId64"\n", pts_time);
-	        
-	        if (filter_frame->pts == AV_NOPTS_VALUE) pts_time = 0;
-	        
-	        if (pts_time < prev_pts_time) {
-	            Clear_Cuedata(FRAMEBUFFER_TYPE_VIDEO);
-	        }
-	        prev_pts_time = pts_time;
-	        
-		    if (gDebugDecode) {
-		        //TextScreen_Wait(100);
-	            printf("VideoBuffer:time=%d.%03d:pts=%"PRId64":TB=%d/%d:width=%d:height=%d\n", 
-	                              (int)(pts_time / 1000000), (int)((pts_time % 1000000) / 1000), filter_frame->pts, time_base.num, 
-	                              time_base.den, filter_frame->width, filter_frame->height);
-		    } else {  // make video cue data
-		        /*
-		        if (ignore_video) {
-		            // pts_time = (int64_t)GetTickCount() * 1000 - gStartTime;
-		            ignore_video--;
-		        } else {}
-		        */
-		        {
-			        if (ignore_video) {
-			            pts_time = -1000LL*1000LL*1000LL;
-			            ignore_video--;
-			        }
-		            
-				    p0 = filter_frame->data[0];
-				    for (y = 0; y < filter_frame->height; y++) {
-				        p = p0;
-				        for (x = 0; x < filter_frame->width; x++)
-				            TextScreen_PutCell(gBitmap, x, y, " .-:+*H#"[*(p++) / 32]);
-				        p0 += filter_frame->linesize[0];
-				    }
-			        tmp = TextScreen_DupBitmap(gBitmap);
-			        vbuf = Framebuffer_New(0, 0);
-			        if (vbuf) {
-			            vbuf->type = FRAMEBUFFER_TYPE_VIDEO;
-			            vbuf->pts  = pts_time;
-			            vbuf->data = (void *)tmp;
-			            vbuf->playnum = Playlist_GetCurrentPlay();
-			            Framebuffer_Put(vbuf);
-			        }
-			    }
-		    }
-	        av_frame_unref(filter_frame);
-	    }
+            filter_frame->pts = av_frame_get_best_effort_timestamp(filter_frame);
+            time_base = buffersink_ctx->inputs[0]->time_base;
+            pts_time = av_rescale_q(filter_frame->pts, time_base, AV_TIME_BASE_Q);
+            // printf("pts_time:%"PRId64"\n", pts_time);
+            
+            if (filter_frame->pts == AV_NOPTS_VALUE) pts_time = 0;
+            
+            if (pts_time < prev_pts_time) {
+                Clear_Cuedata(FRAMEBUFFER_TYPE_VIDEO);
+            }
+            prev_pts_time = pts_time;
+            
+            if (gDebugDecode) {
+                //TextScreen_Wait(100);
+                printf("VideoBuffer:time=%d.%03d:pts=%"PRId64":TB=%d/%d:width=%d:height=%d\n", 
+                                  (int)(pts_time / 1000000), (int)((pts_time % 1000000) / 1000), filter_frame->pts, time_base.num, 
+                                  time_base.den, filter_frame->width, filter_frame->height);
+            } else {  // make video cue data
+                /*
+                if (ignore_video) {
+                    // pts_time = (int64_t)GetTickCount() * 1000 - gStartTime;
+                    ignore_video--;
+                } else {}
+                */
+                {
+                    if (ignore_video) {
+                        pts_time = -1000LL*1000LL*1000LL;
+                        ignore_video--;
+                    }
+                    
+                    p0 = filter_frame->data[0];
+                    for (y = 0; y < filter_frame->height; y++) {
+                        p = p0;
+                        for (x = 0; x < filter_frame->width; x++)
+                            TextScreen_PutCell(gBitmap, x, y, " .-:+*H#"[*(p++) / 32]);
+                        p0 += filter_frame->linesize[0];
+                    }
+                    tmp = TextScreen_DupBitmap(gBitmap);
+                    vbuf = Framebuffer_New(0, 0);
+                    if (vbuf) {
+                        vbuf->type = FRAMEBUFFER_TYPE_VIDEO;
+                        vbuf->pts  = pts_time;
+                        vbuf->data = (void *)tmp;
+                        vbuf->playnum = Playlist_GetCurrentPlay();
+                        Framebuffer_Put(vbuf);
+                    }
+                }
+            }
+            av_frame_unref(filter_frame);
+        }
         av_frame_unref(frame);
     }
     // av_free_packet(&packet);
@@ -1287,7 +1287,7 @@ void Do_Clipboard_Copy(int reverse) {
         size = (bitmap->width + 2) * bitmap->height + 2;
         cdata = GlobalAlloc(GMEM_MOVEABLE, size);
         if (cdata) {
-	        p= (char *)GlobalLock(cdata);
+            p= (char *)GlobalLock(cdata);
             index = 0;
             for (y = 0; y < bitmap->height; y++) {
                 for (x = 0; x < bitmap->width; x++) {
@@ -1302,13 +1302,13 @@ void Do_Clipboard_Copy(int reverse) {
                 p[index++] = 0x0a;
             }
             p[index++] = 0x00;
-	        GlobalUnlock(cdata);
-	        EmptyClipboard();
-	        if (SetClipboardData(CF_TEXT, cdata) == NULL) {
-	            // printf("Err:%d\n", GetLastError());
-	            GlobalFree(cdata);
-	        }
-	    }
+            GlobalUnlock(cdata);
+            EmptyClipboard();
+            if (SetClipboardData(CF_TEXT, cdata) == NULL) {
+                // printf("Err:%d\n", GetLastError());
+                GlobalFree(cdata);
+            }
+        }
         CloseClipboard();
     }
 }
@@ -1324,56 +1324,56 @@ void Stream_Restart(const wchar_t *filename, int seamless)
         int ret;
         char strbuf[256];
         
-	    if (video_stream_index != -1) {
-		    avcodec_close(dec_ctx);
-		    avformat_close_input(&fmt_ctx);
-		    dec_ctx = NULL;
-		    fmt_ctx = NULL;
-		    video_stream_index = -1;
-	    }
-	    if (audio_stream_index != -1) {
-		    avcodec_close(adec_ctx);
-		    avformat_close_input(&afmt_ctx);
-		    adec_ctx = NULL;
-		    afmt_ctx = NULL;
-		    audio_stream_index = -1;
-	    }
-	    
-	    if (!seamless) {
-		    SDL_LockAudio();
-		    Clear_Cuedata(FRAMEBUFFER_TYPE_AUDIO);
-		    SDL_UnlockAudio();
-		}
-	    Clear_Cuedata(FRAMEBUFFER_TYPE_VIDEO);
-	    Clear_Cuedata(FRAMEBUFFER_TYPE_VOID);
-	    
-	    if (gBitmapLastVideo) TextScreen_FreeBitmap(gBitmapLastVideo);
-	    gBitmapLastVideo = NULL;
-	    
-	    gReadDoneAudio = 0;
-	    gReadDoneVideo = 0;
-	    // initialize audio stream (open file, init filters)
-	    //snprintf(strbuf, sizeof(strbuf), "aresample=%d,aformat=sample_fmts=s16:channel_layouts=stereo", (int)gSampleRate);
-	    snprintf(strbuf, sizeof(strbuf), "anull");
-	    if ((ret = AudioStream_OpenFile(gFilename)) < 0) {
-	        gReadDoneAudio = 1;
-	    } else {
-	        if ((ret = AudioStream_InitFilters(strbuf)) < 0 )
-	            exit_proc();
-	    }
-	    
-	    // initialize video stream (open file, init filters)
-	    snprintf(strbuf, sizeof(strbuf), "scale=%d:%d", gBitmap->width, gBitmap->height);
-	    if ((ret = VideoStream_OpenFile(gFilename)) < 0) {
-	        gReadDoneVideo = 1;
-	    } else {
-	        if ((ret = VideoStream_InitFilters(strbuf)) < 0 )
-	            exit_proc();
+        if (video_stream_index != -1) {
+            avcodec_close(dec_ctx);
+            avformat_close_input(&fmt_ctx);
+            dec_ctx = NULL;
+            fmt_ctx = NULL;
+            video_stream_index = -1;
+        }
+        if (audio_stream_index != -1) {
+            avcodec_close(adec_ctx);
+            avformat_close_input(&afmt_ctx);
+            adec_ctx = NULL;
+            afmt_ctx = NULL;
+            audio_stream_index = -1;
+        }
+        
+        if (!seamless) {
+            SDL_LockAudio();
+            Clear_Cuedata(FRAMEBUFFER_TYPE_AUDIO);
+            SDL_UnlockAudio();
+        }
+        Clear_Cuedata(FRAMEBUFFER_TYPE_VIDEO);
+        Clear_Cuedata(FRAMEBUFFER_TYPE_VOID);
+        
+        if (gBitmapLastVideo) TextScreen_FreeBitmap(gBitmapLastVideo);
+        gBitmapLastVideo = NULL;
+        
+        gReadDoneAudio = 0;
+        gReadDoneVideo = 0;
+        // initialize audio stream (open file, init filters)
+        //snprintf(strbuf, sizeof(strbuf), "aresample=%d,aformat=sample_fmts=s16:channel_layouts=stereo", (int)gSampleRate);
+        snprintf(strbuf, sizeof(strbuf), "anull");
+        if ((ret = AudioStream_OpenFile(gFilename)) < 0) {
+            gReadDoneAudio = 1;
+        } else {
+            if ((ret = AudioStream_InitFilters(strbuf)) < 0 )
+                exit_proc();
+        }
+        
+        // initialize video stream (open file, init filters)
+        snprintf(strbuf, sizeof(strbuf), "scale=%d:%d", gBitmap->width, gBitmap->height);
+        if ((ret = VideoStream_OpenFile(gFilename)) < 0) {
+            gReadDoneVideo = 1;
+        } else {
+            if ((ret = VideoStream_InitFilters(strbuf)) < 0 )
+                exit_proc();
             if (VideoStream_ReadAndBuffer() < 0) {
                 gReadDoneVideo = 1;
             }
-	    }
-	}
+        }
+    }
     
     if (!seamless) {
         SDL_PauseAudio(0);
@@ -1383,7 +1383,7 @@ void Stream_Restart(const wchar_t *filename, int seamless)
 
 int Get_ConsoleSize(int *width, int *height)
 {
-	HANDLE stdouth;
+    HANDLE stdouth;
     CONSOLE_SCREEN_BUFFER_INFO info;
     int ret;
     
@@ -1442,10 +1442,10 @@ size_t Get_FilenameFromFullpath(char *filename, int filenamelen , const char *fu
         }
     }
     
-	snprintf(filename, filenamelen, "%s", (fullpathname + head));
-	filename[filenamelen - 1] = 0;
-	
-	return strlen((fullpathname + head));
+    snprintf(filename, filenamelen, "%s", (fullpathname + head));
+    filename[filenamelen - 1] = 0;
+    
+    return strlen((fullpathname + head));
 }
 
 size_t Get_DirNameFromFullpath(char *filename, int filenamelen , const char *fullpathname) {
@@ -1474,13 +1474,13 @@ size_t Get_DirNameFromFullpath(char *filename, int filenamelen , const char *ful
         }
     }
     
-	snprintf(filename, filenamelen, "%s", fullpathname);
-	filename[filenamelen - 1] = 0;
-	if (filenamelen > head) {
-	    filename[head] = 0;
-	}
-	
-	return head;
+    snprintf(filename, filenamelen, "%s", fullpathname);
+    filename[filenamelen - 1] = 0;
+    if (filenamelen > head) {
+        filename[head] = 0;
+    }
+    
+    return head;
 }
 
 void CopyMediaInfo2PlaylistData(PlaylistData *ppd, MediaInfo *minfo)
@@ -1546,55 +1546,55 @@ int Playlist_Make(wchar_t *dirname, int count)
                 if (isMediaFile(fullpath, &minfo)) {
                     ppd = Playlist_CreateData();
                     if (ppd) {
-	                    snwprintf(ppd->filename_w, MAX_PATH - 1, L"%s", fullpath);
-	                    ppd->filename_w[MAX_PATH - 1] = 0;
-	                    WideCharToMultiByte(CP_ACP, 0, fullpath, -1, ppd->filename, sizeof(ppd->filename), NULL, NULL);
-	                    CopyMediaInfo2PlaylistData(ppd, &minfo);
-	                    if (Playlist_AddData(ppd) == -1) {
-	                        Playlist_FreeData(ppd);
-	                    } else {
-	                        count++;
-	                    }
-	                    //printf("Filename1=%s\n", ppd->filename);
-	                    //_getch();
-	                }
+                        snwprintf(ppd->filename_w, MAX_PATH - 1, L"%s", fullpath);
+                        ppd->filename_w[MAX_PATH - 1] = 0;
+                        WideCharToMultiByte(CP_ACP, 0, fullpath, -1, ppd->filename, sizeof(ppd->filename), NULL, NULL);
+                        CopyMediaInfo2PlaylistData(ppd, &minfo);
+                        if (Playlist_AddData(ppd) == -1) {
+                            Playlist_FreeData(ppd);
+                        } else {
+                            count++;
+                        }
+                        //printf("Filename1=%s\n", ppd->filename);
+                        //_getch();
+                    }
                 }
             } else 
             if ( (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
                 !(fd.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) &&
                 !(fd.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ) {
                 if (wcscmp(fd.cFileName, L".") && wcscmp(fd.cFileName, L"..")) { 
-	                snwprintf(fullpath, MAX_PATH - 1, L"%s\\%s", dirname, fd.cFileName);
-	                fullpath[MAX_PATH - 1] = 0;
-	                count = Playlist_Make(fullpath, count);  // recursive file search
-		            //printf("Filename2=%s\n", fullpath);
-		            //_getch();
-		        }
+                    snwprintf(fullpath, MAX_PATH - 1, L"%s\\%s", dirname, fd.cFileName);
+                    fullpath[MAX_PATH - 1] = 0;
+                    count = Playlist_Make(fullpath, count);  // recursive file search
+                    //printf("Filename2=%s\n", fullpath);
+                    //_getch();
+                }
             }
             while ( FindNextFileW(hdl, &fd) ) {
                 if ( !(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
-	                !(fd.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) &&
-	                !(fd.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ) {
+                    !(fd.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) &&
+                    !(fd.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ) {
                     //CheckOptionFilename(fd.cFileName);
-	                snwprintf(fullpath, MAX_PATH - 1, L"%s\\%s", dirname, fd.cFileName);
-	                fullpath[MAX_PATH - 1] = 0;
+                    snwprintf(fullpath, MAX_PATH - 1, L"%s\\%s", dirname, fd.cFileName);
+                    fullpath[MAX_PATH - 1] = 0;
                     CheckOptionFilename(fullpath);
-	                if (isMediaFile(fullpath, &minfo)) {
-	                    ppd = Playlist_CreateData();
-	                    if (ppd) {
-		                    snwprintf(ppd->filename_w, MAX_PATH - 1, L"%s", fullpath);
-		                    ppd->filename_w[MAX_PATH - 1] = 0;
-	                        WideCharToMultiByte(CP_ACP, 0, fullpath, -1, ppd->filename, sizeof(ppd->filename), NULL, NULL);
-		                    CopyMediaInfo2PlaylistData(ppd, &minfo);
-		                    if (Playlist_AddData(ppd) == -1) {
-		                        Playlist_FreeData(ppd);
-		                    } else {
-		                        count++;
-		                    }
-	                        //printf("Filename3=%s\n", ppd->filename);
-	                        //_getch();
-		                }
-	                }
+                    if (isMediaFile(fullpath, &minfo)) {
+                        ppd = Playlist_CreateData();
+                        if (ppd) {
+                            snwprintf(ppd->filename_w, MAX_PATH - 1, L"%s", fullpath);
+                            ppd->filename_w[MAX_PATH - 1] = 0;
+                            WideCharToMultiByte(CP_ACP, 0, fullpath, -1, ppd->filename, sizeof(ppd->filename), NULL, NULL);
+                            CopyMediaInfo2PlaylistData(ppd, &minfo);
+                            if (Playlist_AddData(ppd) == -1) {
+                                Playlist_FreeData(ppd);
+                            } else {
+                                count++;
+                            }
+                            //printf("Filename3=%s\n", ppd->filename);
+                            //_getch();
+                        }
+                    }
                     if (count >= PLAYLIST_ARRAY_MAX) break;
                     
                     if ((count % 20 == 0) && gBitmap) {
@@ -1607,15 +1607,15 @@ int Playlist_Make(wchar_t *dirname, int count)
                     }
                 } else
                 if ( (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
-	                !(fd.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) &&
-	                !(fd.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ) {
+                    !(fd.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) &&
+                    !(fd.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ) {
                     if (wcscmp(fd.cFileName, L".") && wcscmp(fd.cFileName, L"..")) { 
-		                snwprintf(fullpath, MAX_PATH - 1, L"%s\\%s", dirname, fd.cFileName);
-		                fullpath[MAX_PATH - 1] = 0;
-	                    count = Playlist_Make(fullpath, count);  // recursive file search
-		                //printf("Filename4=%s\n", fullpath);
-		                //_getch();
-		            }
+                        snwprintf(fullpath, MAX_PATH - 1, L"%s\\%s", dirname, fd.cFileName);
+                        fullpath[MAX_PATH - 1] = 0;
+                        count = Playlist_Make(fullpath, count);  // recursive file search
+                        //printf("Filename4=%s\n", fullpath);
+                        //_getch();
+                    }
                     
                     if (count >= PLAYLIST_ARRAY_MAX) break;
                     /*
@@ -1688,19 +1688,19 @@ void Do_DrawPlaylist(TextScreenBitmap *bitmap)
             int sec, min, hour, sign;
             //int dec;
             
-		    sec = ppd->duration / 1000;
-		    sign = (sec >= 0);
-		    sec = sign ? sec : -sec;
-		    //dec = sec % 1000;
-		    sec = sec / 1000;
-		    hour = sec / 3600;
-		    min = (sec / 60) % 60;
-		    sec = sec % 60;
-		    //snprintf(timestr, sizeof(timestr),"%c%02d:%02d:%02d.%03d", sign ? ' ' : '-', hour, min, sec, dec);
-		    snprintf(timestr, sizeof(timestr),"%c%02d:%02d:%02d", sign ? ' ' : '-', hour, min, sec);
-		    if (ppd->duration < 0) {
-		        snprintf(timestr, sizeof(timestr), "%s", " --------");
-		    }
+            sec = ppd->duration / 1000;
+            sign = (sec >= 0);
+            sec = sign ? sec : -sec;
+            //dec = sec % 1000;
+            sec = sec / 1000;
+            hour = sec / 3600;
+            min = (sec / 60) % 60;
+            sec = sec % 60;
+            //snprintf(timestr, sizeof(timestr),"%c%02d:%02d:%02d.%03d", sign ? ' ' : '-', hour, min, sec, dec);
+            snprintf(timestr, sizeof(timestr),"%c%02d:%02d:%02d", sign ? ' ' : '-', hour, min, sec);
+            if (ppd->duration < 0) {
+                snprintf(timestr, sizeof(timestr), "%s", " --------");
+            }
         }
         //snprintf(strbuf, sizeof(strbuf), "%c : %c%c :%s : %s : (%s/%s)(%d/%d)", (index == currentplay) ? '@' : ' ',
         //                           (ppd->audio) ? 'A' : ' ', (ppd->video) ? 'V' : ' ', timestr, filename,
@@ -1743,19 +1743,19 @@ void Do_Keyboard_GetDDFilename(wchar_t *filename, int len)
     
     // extract first 1 file name
     if (filename[0] == '"') {    // double quote file
-	    for (index = 1; index < len - 6; index++) {
-	        if (filename[index] == '"') {
-	            filename[index] = 0;
-	            break;
-	        }
-	    }
+        for (index = 1; index < len - 6; index++) {
+            if (filename[index] == '"') {
+                filename[index] = 0;
+                break;
+            }
+        }
     } else {
-	    for (index = 1; index < len - 6; index++) {
-	        if (filename[index] == ' ') {
-	            filename[index] = 0;
-	            break;
-	        }
-	    }
+        for (index = 1; index < len - 6; index++) {
+            if (filename[index] == ' ') {
+                filename[index] = 0;
+                break;
+            }
+        }
     }
     
     index = 0;
@@ -1830,181 +1830,181 @@ void Do_Keyboard_Check(void)
         savech[0] = ch;
         
         //  if stdin is ([A-Z]:\) try to get filename.
-	    if ((savech[2] >= 'A') && (savech[2] <= 'Z') && (savech[1] == ':') && (savech[0] == '\\')) {
-	        char filename[MAX_PATH];
-	        wchar_t filename_w[MAX_PATH];
-	        
-	        filename_w[0] = savech[3];
-	        filename_w[1] = savech[2];
-	        filename_w[2] = savech[1];
-	        filename_w[3] = savech[0];
-	        filename_w[4] = 0;
-	        //Do_Keyboard_GetDDFilename(filename, MAX_PATH);
-	        //MultiByteToWideChar(CP_ACP, 0, filename, strlen(filename)+1, filename_w, sizeof(filename_w));
-	        
-	        Do_Keyboard_GetDDFilename(filename_w, MAX_PATH);
+        if ((savech[2] >= 'A') && (savech[2] <= 'Z') && (savech[1] == ':') && (savech[0] == '\\')) {
+            char filename[MAX_PATH];
+            wchar_t filename_w[MAX_PATH];
+            
+            filename_w[0] = savech[3];
+            filename_w[1] = savech[2];
+            filename_w[2] = savech[1];
+            filename_w[3] = savech[0];
+            filename_w[4] = 0;
+            //Do_Keyboard_GetDDFilename(filename, MAX_PATH);
+            //MultiByteToWideChar(CP_ACP, 0, filename, strlen(filename)+1, filename_w, sizeof(filename_w));
+            
+            Do_Keyboard_GetDDFilename(filename_w, MAX_PATH);
             WideCharToMultiByte(CP_ACP, 0, filename_w, -1, filename, sizeof(filename), NULL, NULL);
             
-	        if (isFolder(filename_w)) {
-	            if (Playlist_Make(filename_w, 0)) {
-	                //ppd = Playlist_GetData(Playlist_GetCurrentPlay());
+            if (isFolder(filename_w)) {
+                if (Playlist_Make(filename_w, 0)) {
+                    //ppd = Playlist_GetData(Playlist_GetCurrentPlay());
                     //Stream_Restart(ppd->filename, 0);
                 }
-	        } else {
-	            CheckOptionFilename(filename_w);
-		        if (isMediaFile(filename_w, &minfo)) {
-		            ppd = Playlist_CreateData();
-		            snwprintf(ppd->filename_w, MAX_PATH - 1, L"%s", filename_w);
-		            ppd->filename_w[MAX_PATH - 1] = 0;
-		            snprintf(ppd->filename, MAX_PATH - 1, "%s", filename);
-		            ppd->filename[MAX_PATH - 1] = 0;
-		            CopyMediaInfo2PlaylistData(ppd, &minfo);
-		            if (Playlist_AddData(ppd) == -1) {
-		                Playlist_FreeData(ppd);
-		            }
-		            /*
-		            Playlist_SetCurrentPlay(-1);
-		            Stream_Restart(filename, 0);
-		            */
-		        }
-		    }
-	        
-	        //for (i = 0; i < sizeof(savech); i++) savech[i] = 0;
-	        for (i = 0; i < 4; i++) savech[i] = 0;
-	        ch = 0;
+            } else {
+                CheckOptionFilename(filename_w);
+                if (isMediaFile(filename_w, &minfo)) {
+                    ppd = Playlist_CreateData();
+                    snwprintf(ppd->filename_w, MAX_PATH - 1, L"%s", filename_w);
+                    ppd->filename_w[MAX_PATH - 1] = 0;
+                    snprintf(ppd->filename, MAX_PATH - 1, "%s", filename);
+                    ppd->filename[MAX_PATH - 1] = 0;
+                    CopyMediaInfo2PlaylistData(ppd, &minfo);
+                    if (Playlist_AddData(ppd) == -1) {
+                        Playlist_FreeData(ppd);
+                    }
+                    /*
+                    Playlist_SetCurrentPlay(-1);
+                    Stream_Restart(filename, 0);
+                    */
+                }
+            }
+            
+            //for (i = 0; i < sizeof(savech); i++) savech[i] = 0;
+            for (i = 0; i < 4; i++) savech[i] = 0;
+            ch = 0;
         }
         
         //  if stdin is (\\*) try to get filename.
-	    if ((savech[1] == '\\') && (savech[0] == '\\')) {
-	        char filename[MAX_PATH];
-	        wchar_t filename_w[MAX_PATH];
-	        
-	        filename_w[0] = savech[2];
-	        filename_w[1] = savech[1];
-	        filename_w[2] = savech[0];
-	        filename_w[3] = 0;
-	        //Do_Keyboard_GetDDFilename(filename, MAX_PATH);
-	        //MultiByteToWideChar(CP_ACP, 0, filename, strlen(filename)+1, filename_w, sizeof(filename_w));
-	        
-	        Do_Keyboard_GetDDFilename(filename_w, MAX_PATH);
+        if ((savech[1] == '\\') && (savech[0] == '\\')) {
+            char filename[MAX_PATH];
+            wchar_t filename_w[MAX_PATH];
+            
+            filename_w[0] = savech[2];
+            filename_w[1] = savech[1];
+            filename_w[2] = savech[0];
+            filename_w[3] = 0;
+            //Do_Keyboard_GetDDFilename(filename, MAX_PATH);
+            //MultiByteToWideChar(CP_ACP, 0, filename, strlen(filename)+1, filename_w, sizeof(filename_w));
+            
+            Do_Keyboard_GetDDFilename(filename_w, MAX_PATH);
             WideCharToMultiByte(CP_ACP, 0, filename_w, -1, filename, sizeof(filename), NULL, NULL);
             
-	        if (isFolder(filename_w)) {
-	            if (Playlist_Make(filename_w, 0)) {
-	                //ppd = Playlist_GetData(Playlist_GetCurrentPlay());
+            if (isFolder(filename_w)) {
+                if (Playlist_Make(filename_w, 0)) {
+                    //ppd = Playlist_GetData(Playlist_GetCurrentPlay());
                     //Stream_Restart(ppd->filename, 0);
                 }
-	        } else {
-		        if (isMediaFile(filename_w, &minfo)) {
-		            ppd = Playlist_CreateData();
-		            snwprintf(ppd->filename_w, MAX_PATH - 1, L"%s", filename_w);
-		            ppd->filename_w[MAX_PATH - 1] = 0;
-		            snprintf(ppd->filename, MAX_PATH - 1, "%s", filename);
-		            ppd->filename[MAX_PATH - 1] = 0;
-		            CopyMediaInfo2PlaylistData(ppd, &minfo);
-		            if (Playlist_AddData(ppd) == -1) {
-		                Playlist_FreeData(ppd);
-		            }
-		            /*
-		            Playlist_SetCurrentPlay(-1);
-		            Stream_Restart(filename, 0);
-		            */
-		        }
-		    }
-	        
-	        //for (i = 0; i < sizeof(savech); i++) savech[i] = 0;
-	        for (i = 0; i < 4; i++) savech[i] = 0;
-	        ch = 0;
+            } else {
+                if (isMediaFile(filename_w, &minfo)) {
+                    ppd = Playlist_CreateData();
+                    snwprintf(ppd->filename_w, MAX_PATH - 1, L"%s", filename_w);
+                    ppd->filename_w[MAX_PATH - 1] = 0;
+                    snprintf(ppd->filename, MAX_PATH - 1, "%s", filename);
+                    ppd->filename[MAX_PATH - 1] = 0;
+                    CopyMediaInfo2PlaylistData(ppd, &minfo);
+                    if (Playlist_AddData(ppd) == -1) {
+                        Playlist_FreeData(ppd);
+                    }
+                    /*
+                    Playlist_SetCurrentPlay(-1);
+                    Stream_Restart(filename, 0);
+                    */
+                }
+            }
+            
+            //for (i = 0; i < sizeof(savech); i++) savech[i] = 0;
+            for (i = 0; i < 4; i++) savech[i] = 0;
+            ch = 0;
         }
         
-	    if (ch == 0xe0) {  // scancode 'e0' 'xx'
-	        int ch2;
-	        ch2 = _getwch();
-		    if (ch2 == 0x48) {   // up arrow key
-		        gVolume += 5;
-		        if (gVolume > 500) gVolume = 500;
-		    }
-		    if (ch2 == 0x50) {   // down arrow key
-		        gVolume -= 5;
-		        if (gVolume < 0) gVolume = 0;
-		    }
-		    if (ch2 == 0x4b && !gPause) {   // left arrow key
-		        {  // experimental 20150310  rewind through previous media
-		            int64_t pts;
-		            int64_t seekpos;
-		            int64_t seekdelta = 10 * 1000000L;  // -10 sec
-		            
-		            ppd = Playlist_GetData(gAudioCurrentPlaynum);
-		            pts = gAudioCurrentPts - ppd->start_time;
-		            if (pts < 3*1000*1000) {
-	                    Playlist_SetCurrentPlay(gAudioCurrentPlaynum);
-	                    Playlist_SetPreviousCurrentPlay();
-	                    ppd = Playlist_GetData(Playlist_GetCurrentPlay());
-	                    Stream_Restart(ppd->filename_w, 0);
-	                    seekpos = ppd->start_time + ppd->duration - seekdelta;
-	                    if (seekpos < 0) seekpos = 0;
-	                    Stream_Seek(seekpos);
-	                    gAudioCurrentPlaynum = Playlist_GetCurrentPlay();
-	                    gAudioCurrentPts = seekpos;
-		            } else {
-		                if (gAudioCurrentPlaynum == Playlist_GetCurrentPlay()) {
-		                    if (gReadDoneAudio) {
-		                        ppd = Playlist_GetData(gAudioCurrentPlaynum);
-		                        Stream_Restart(ppd->filename_w, 0);
-		                        seekpos = pts - seekdelta;
-		                        if (seekpos < 0) seekpos = 0;
-		                        Stream_Seek(seekpos);
-			                    gAudioCurrentPlaynum = Playlist_GetCurrentPlay();
-			                    gAudioCurrentPts = seekpos;
-		                    } else {
-		                        Stream_Seek( -seekdelta);
-		                    }
-		                } else {
-		                    Playlist_SetCurrentPlay(gAudioCurrentPlaynum);
-		                    ppd = Playlist_GetData(Playlist_GetCurrentPlay());
-		                    Stream_Restart(ppd->filename_w, 0);
-		                    seekpos = pts - seekdelta;
-		                    if (seekpos < 0) seekpos = 0;
-		                    Stream_Seek(seekpos);
-		                    gAudioCurrentPlaynum = Playlist_GetCurrentPlay();
-		                    gAudioCurrentPts = seekpos;
-		                }
-		            }
-		        }
-		    }
-		    if (ch2 == 0x4d && !gPause) {   // right arrow key
-		        {
-		            int64_t  seekdelta = 10 * 1000000L;  // +10 sec
-		            
-		            if (gAudioCurrentPlaynum == Playlist_GetCurrentPlay()) {
-		                Stream_Seek( seekdelta );
-		            } else {
-		                ppd = Playlist_GetData(Playlist_GetCurrentPlay());
-		                Stream_Restart(ppd->filename_w, 0);
-		            }
-		        }
-		    }
-		    if (ch2 == 0x49 && !gPause) {   // page up key
-		        Do_PlayPrevious();
-		    }
-		    if (ch2 == 0x51 && !gPause) {   // page down key
-		        Do_PlayNext();
-		    }
-		    if (ch2 == 0x47 && !gPause) {   // home key
-		        Do_PlayRestart();
-		    }
-		    if (ch2 == 0x4f && !gPause) {   // end key
-		    }
-		    if (ch2 == 0x52 && !gPause) {   // insert key
-		    }
-		    if (ch2 == 0x53 && !gPause) {   // delete key
-		    }
-		    
-		    // printf("%02x", ch2);
-	        ch = 0;
-	    }
-	    //for (i = sizeof(savech) - 1; i > 0; i--) savech[i]  = savech[i-1];
-	    for (i = 4 - 1; i > 0; i--) savech[i]  = savech[i-1];
+        if (ch == 0xe0) {  // scancode 'e0' 'xx'
+            int ch2;
+            ch2 = _getwch();
+            if (ch2 == 0x48) {   // up arrow key
+                gVolume += 5;
+                if (gVolume > 500) gVolume = 500;
+            }
+            if (ch2 == 0x50) {   // down arrow key
+                gVolume -= 5;
+                if (gVolume < 0) gVolume = 0;
+            }
+            if (ch2 == 0x4b && !gPause) {   // left arrow key
+                {  // experimental 20150310  rewind through previous media
+                    int64_t pts;
+                    int64_t seekpos;
+                    int64_t seekdelta = 10 * 1000000L;  // -10 sec
+                    
+                    ppd = Playlist_GetData(gAudioCurrentPlaynum);
+                    pts = gAudioCurrentPts - ppd->start_time;
+                    if (pts < 3*1000*1000) {
+                        Playlist_SetCurrentPlay(gAudioCurrentPlaynum);
+                        Playlist_SetPreviousCurrentPlay();
+                        ppd = Playlist_GetData(Playlist_GetCurrentPlay());
+                        Stream_Restart(ppd->filename_w, 0);
+                        seekpos = ppd->start_time + ppd->duration - seekdelta;
+                        if (seekpos < 0) seekpos = 0;
+                        Stream_Seek(seekpos);
+                        gAudioCurrentPlaynum = Playlist_GetCurrentPlay();
+                        gAudioCurrentPts = seekpos;
+                    } else {
+                        if (gAudioCurrentPlaynum == Playlist_GetCurrentPlay()) {
+                            if (gReadDoneAudio) {
+                                ppd = Playlist_GetData(gAudioCurrentPlaynum);
+                                Stream_Restart(ppd->filename_w, 0);
+                                seekpos = pts - seekdelta;
+                                if (seekpos < 0) seekpos = 0;
+                                Stream_Seek(seekpos);
+                                gAudioCurrentPlaynum = Playlist_GetCurrentPlay();
+                                gAudioCurrentPts = seekpos;
+                            } else {
+                                Stream_Seek( -seekdelta);
+                            }
+                        } else {
+                            Playlist_SetCurrentPlay(gAudioCurrentPlaynum);
+                            ppd = Playlist_GetData(Playlist_GetCurrentPlay());
+                            Stream_Restart(ppd->filename_w, 0);
+                            seekpos = pts - seekdelta;
+                            if (seekpos < 0) seekpos = 0;
+                            Stream_Seek(seekpos);
+                            gAudioCurrentPlaynum = Playlist_GetCurrentPlay();
+                            gAudioCurrentPts = seekpos;
+                        }
+                    }
+                }
+            }
+            if (ch2 == 0x4d && !gPause) {   // right arrow key
+                {
+                    int64_t  seekdelta = 10 * 1000000L;  // +10 sec
+                    
+                    if (gAudioCurrentPlaynum == Playlist_GetCurrentPlay()) {
+                        Stream_Seek( seekdelta );
+                    } else {
+                        ppd = Playlist_GetData(Playlist_GetCurrentPlay());
+                        Stream_Restart(ppd->filename_w, 0);
+                    }
+                }
+            }
+            if (ch2 == 0x49 && !gPause) {   // page up key
+                Do_PlayPrevious();
+            }
+            if (ch2 == 0x51 && !gPause) {   // page down key
+                Do_PlayNext();
+            }
+            if (ch2 == 0x47 && !gPause) {   // home key
+                Do_PlayRestart();
+            }
+            if (ch2 == 0x4f && !gPause) {   // end key
+            }
+            if (ch2 == 0x52 && !gPause) {   // insert key
+            }
+            if (ch2 == 0x53 && !gPause) {   // delete key
+            }
+            
+            // printf("%02x", ch2);
+            ch = 0;
+        }
+        //for (i = sizeof(savech) - 1; i > 0; i--) savech[i]  = savech[i-1];
+        for (i = 4 - 1; i > 0; i--) savech[i]  = savech[i-1];
     }
     
     //if (ch) printf("key = %04x", ch);
@@ -2113,50 +2113,50 @@ void Do_Resize_Check(void)
         int  i;
         char strbuf[32];
         
-	    screen.width = console_width - 4;     // console width  - 4
+        screen.width = console_width - 4;     // console width  - 4
         screen.height = console_height - 3;   // console height - 3
-	    if (screen.width < 1) screen.width = 1;
-	    if (screen.height < 1) screen.height = 1;
+        if (screen.width < 1) screen.width = 1;
+        if (screen.height < 1) screen.height = 1;
         
-	    TextScreen_Init(&screen);
-	    TextScreen_ClearScreen();
-	    
-		TextScreen_FreeBitmap(gBitmap);
-	    gBitmap = TextScreen_CreateBitmap(screen.width, screen.height);
-	    
-	    SDL_LockAudio();
-	    MUTEX_LOCK(gMutexBitmapWave);
-		TextScreen_FreeBitmap(gBitmapWave);
-	    gBitmapWave = TextScreen_CreateBitmap(screen.width, screen.height);
-	    MUTEX_UNLOCK(gMutexBitmapWave);
-	    SDL_UnlockAudio();
-	    
-	    if (gBitmapList) {
-	        TextScreen_FreeBitmap(gBitmapList);
-	        gBitmapList = NULL;
-	    }
-	    /*
-	    if (gBitmapLastVideo) {
-	        //TextScreen_ResizeBitmap(gBitmapLastVideo, screen.width, screen.height);
-	        TextScreen_CropBitmap(gBitmapLastVideo, 0, 0, screen.width, screen.height);
-	    }
-	    */
-	    
-	    listnum = Framebuffer_ListNum(FRAMEBUFFER_TYPE_VIDEO);
-	    for (i = 0; i < listnum; i++) {
-		    buf = Framebuffer_Get(FRAMEBUFFER_TYPE_VIDEO);
-		    bitmap = (TextScreenBitmap *)buf->data;
-		    newbitmap = TextScreen_CreateBitmap(screen.width, screen.height);
-		    TextScreen_CopyBitmap(newbitmap, bitmap, 0, 0);
-		    TextScreen_FreeBitmap(bitmap);
-		    buf->data = (void *)newbitmap;
-		    Framebuffer_Put(buf);
-		}
-		if (video_stream_index != -1) {
-		    snprintf(strbuf, sizeof(strbuf), "scale=%d:%d", gBitmap->width, gBitmap->height);
-		    if (VideoStream_InitFilters(strbuf) < 0 )
-		            exit_proc();
-		}
+        TextScreen_Init(&screen);
+        TextScreen_ClearScreen();
+        
+        TextScreen_FreeBitmap(gBitmap);
+        gBitmap = TextScreen_CreateBitmap(screen.width, screen.height);
+        
+        SDL_LockAudio();
+        MUTEX_LOCK(gMutexBitmapWave);
+        TextScreen_FreeBitmap(gBitmapWave);
+        gBitmapWave = TextScreen_CreateBitmap(screen.width, screen.height);
+        MUTEX_UNLOCK(gMutexBitmapWave);
+        SDL_UnlockAudio();
+        
+        if (gBitmapList) {
+            TextScreen_FreeBitmap(gBitmapList);
+            gBitmapList = NULL;
+        }
+        /*
+        if (gBitmapLastVideo) {
+            //TextScreen_ResizeBitmap(gBitmapLastVideo, screen.width, screen.height);
+            TextScreen_CropBitmap(gBitmapLastVideo, 0, 0, screen.width, screen.height);
+        }
+        */
+        
+        listnum = Framebuffer_ListNum(FRAMEBUFFER_TYPE_VIDEO);
+        for (i = 0; i < listnum; i++) {
+            buf = Framebuffer_Get(FRAMEBUFFER_TYPE_VIDEO);
+            bitmap = (TextScreenBitmap *)buf->data;
+            newbitmap = TextScreen_CreateBitmap(screen.width, screen.height);
+            TextScreen_CopyBitmap(newbitmap, bitmap, 0, 0);
+            TextScreen_FreeBitmap(bitmap);
+            buf->data = (void *)newbitmap;
+            Framebuffer_Put(buf);
+        }
+        if (video_stream_index != -1) {
+            snprintf(strbuf, sizeof(strbuf), "scale=%d:%d", gBitmap->width, gBitmap->height);
+            if (VideoStream_InitFilters(strbuf) < 0 )
+                    exit_proc();
+        }
     }
 }
 
@@ -2184,17 +2184,17 @@ void Do_DrawInfo(TextScreenBitmap *bitmap)
     Get_FilenameFromFullpath(strbuf, MAX_PATH - 1, ppd->filename);
     //Get_FilenameFromFullpath(strbuf, MAX_PATH - 1, gFilename);
     if (strbuf[0])
-	    TextScreen_DrawText(bitmap, 0, y++, strbuf);
+        TextScreen_DrawText(bitmap, 0, y++, strbuf);
     /*
     // get name part
     len = strlen(gFilename);
     if (len && (len < MAX_PATH - 1)) {
-	    i = len - 1;
-	    while ((gFilename[i] != '\\') && (gFilename[i] != '/') && (i >= 0)) i--;
-	    snprintf(strbuf, len - i, "%s", (gFilename + i + 1));
-	    TextScreen_DrawText(bitmap, 0, y++, strbuf);
-	}
-	*/
+        i = len - 1;
+        while ((gFilename[i] != '\\') && (gFilename[i] != '/') && (i >= 0)) i--;
+        snprintf(strbuf, len - i, "%s", (gFilename + i + 1));
+        TextScreen_DrawText(bitmap, 0, y++, strbuf);
+    }
+    */
     //TextScreen_DrawText(bitmap, 0, y++, gFilename);
     
     if (gShowInfo < 2) return;
@@ -2228,16 +2228,16 @@ void Do_DrawInfo(TextScreenBitmap *bitmap)
     } else {
         int sign, hour, min, sec, dec;
         
-	    sec = duration / 1000;
-	    sign = (sec >= 0);
-	    sec = sign ? sec : -sec;
-	    dec = sec % 1000;
-	    sec = sec / 1000;
-	    hour = sec / 3600;
-	    min = (sec / 60) % 60;
-	    sec = sec % 60;
-	    snprintf(timestr, sizeof(timestr),"%c%02d:%02d:%02d.%03d", sign ? ' ' : '-', hour, min, sec, dec);
-	}
+        sec = duration / 1000;
+        sign = (sec >= 0);
+        sec = sign ? sec : -sec;
+        dec = sec % 1000;
+        sec = sec / 1000;
+        hour = sec / 3600;
+        min = (sec / 60) % 60;
+        sec = sec % 60;
+        snprintf(timestr, sizeof(timestr),"%c%02d:%02d:%02d.%03d", sign ? ' ' : '-', hour, min, sec, dec);
+    }
     snprintf(strbuf, sizeof(strbuf), "Duration:%s ", timestr);
     TextScreen_DrawText(bitmap, 0, y++, strbuf);
     snprintf(strbuf, sizeof(strbuf), "Codec: %s/%s ", avcodec_get_name(video_codec_id), avcodec_get_name(audio_codec_id));
@@ -2250,13 +2250,13 @@ void Do_DrawInfo(TextScreenBitmap *bitmap)
         den = ppd->video_avg_frame_rate_den;
         num = ppd->video_avg_frame_rate_num;
         if (den) {
-	        fps = (int)((int64_t)num * 100LL / (int64_t)den);
-		    snprintf(strbuf, sizeof(strbuf), "FPS(ave): %d.%02d ", fps / 100, fps % 100);
-	        TextScreen_DrawText(bitmap, 0, y++, strbuf);
-	    } else {
-		    snprintf(strbuf, sizeof(strbuf), "FPS(ave): n/a ");
-	        TextScreen_DrawText(bitmap, 0, y++, strbuf);
-	    }
+            fps = (int)((int64_t)num * 100LL / (int64_t)den);
+            snprintf(strbuf, sizeof(strbuf), "FPS(ave): %d.%02d ", fps / 100, fps % 100);
+            TextScreen_DrawText(bitmap, 0, y++, strbuf);
+        } else {
+            snprintf(strbuf, sizeof(strbuf), "FPS(ave): n/a ");
+            TextScreen_DrawText(bitmap, 0, y++, strbuf);
+        }
     }
     snprintf(strbuf, sizeof(strbuf), "Audio Buffer: %2d ", Framebuffer_ListNum(FRAMEBUFFER_TYPE_AUDIO));
     TextScreen_DrawText(bitmap, 0, y++, strbuf);
@@ -2310,20 +2310,20 @@ void Do_DrawStatus(void)
     
     if (gBarMode == 1) {
         if (duration < 1000000) duration = 1000000;
-	    level = (pts - start_time) * 33 / duration;
-	    if (level < 0) level = 0;
-	    if (level > 32) level = 32;
-	    for (i = 0; i < level; i++) strbuf2[i] = '@';
-	    for (i = level; i < 32; i++) strbuf2[i] = ' ';
-	    strbuf2[32] = 0;
-	} else {
-	    level = gAudioLevel / 1024;
-	    if (level < 0) level = 0;
-	    if (level > 32) level = 32;
-	    for (i = 0; i < level; i++) strbuf2[i] = '#';
-	    for (i = level; i < 32; i++) strbuf2[i] = ' ';
-	    strbuf2[32] = 0;
-	}
+        level = (pts - start_time) * 33 / duration;
+        if (level < 0) level = 0;
+        if (level > 32) level = 32;
+        for (i = 0; i < level; i++) strbuf2[i] = '@';
+        for (i = level; i < 32; i++) strbuf2[i] = ' ';
+        strbuf2[32] = 0;
+    } else {
+        level = gAudioLevel / 1024;
+        if (level < 0) level = 0;
+        if (level > 32) level = 32;
+        for (i = 0; i < level; i++) strbuf2[i] = '#';
+        for (i = level; i < 32; i++) strbuf2[i] = ' ';
+        strbuf2[32] = 0;
+    }
     
     ad = (int)(gADiff/1000);
     //ad = (int)(gCallDiff);
@@ -2392,17 +2392,17 @@ void AudioWave_Entry(void)
             AudioWave_Draw(waveBitmap, stream16buf, stream16len);
             Framebuffer_Free(abuf);
             
-	        MUTEX_LOCK(gMutexBitmapWave);
-	        if ((gBitmapWave->width != waveBitmap->width) || (gBitmapWave->height != waveBitmap->height)) {
-	            TextScreen_FreeBitmap(waveBitmap);
-	            waveBitmap = TextScreen_DupBitmap(gBitmapWave);
-	            if (!waveBitmap) {
-	                MUTEX_UNLOCK(gMutexBitmapWave);
-	                break;
-	            }
-	        }
-	        TextScreen_CopyBitmap(gBitmapWave, waveBitmap, 0, 0);
-	        MUTEX_UNLOCK(gMutexBitmapWave);
+            MUTEX_LOCK(gMutexBitmapWave);
+            if ((gBitmapWave->width != waveBitmap->width) || (gBitmapWave->height != waveBitmap->height)) {
+                TextScreen_FreeBitmap(waveBitmap);
+                waveBitmap = TextScreen_DupBitmap(gBitmapWave);
+                if (!waveBitmap) {
+                    MUTEX_UNLOCK(gMutexBitmapWave);
+                    break;
+                }
+            }
+            TextScreen_CopyBitmap(gBitmapWave, waveBitmap, 0, 0);
+            MUTEX_UNLOCK(gMutexBitmapWave);
         }
         
         Sleep(10);
@@ -2412,7 +2412,7 @@ void AudioWave_Entry(void)
 
 int main(int argc, char *argv[])
 {
-	HANDLE stdinh, stdouth;
+    HANDLE stdinh, stdouth;
     TextScreenSetting screen;
     SDL_AudioSpec desired, obtained;
     int console_width, console_height;
@@ -2557,38 +2557,38 @@ int main(int argc, char *argv[])
         count = 0;
         for ( i = 1 ; i < argc; i++ ) {
             if (isFolder(argv_w[i])) {
-		        count = Playlist_Make(argv_w[i], count);
+                count = Playlist_Make(argv_w[i], count);
             } else {
                 CheckOptionFilename(argv_w[i]);
                 if (isMediaFile(argv_w[i], &minfo)) {
-	                ppd = Playlist_CreateData();
+                    ppd = Playlist_CreateData();
                     snwprintf(ppd->filename_w, MAX_PATH - 1, L"%s", argv_w[i]);
                     ppd->filename_w[MAX_PATH - 1] = 0;
                     snprintf(ppd->filename, MAX_PATH - 1, "%s", argv[i]);
                     ppd->filename[MAX_PATH - 1] = 0;
-	                CopyMediaInfo2PlaylistData(ppd, &minfo);
-	                if (Playlist_AddData(ppd) == -1) {
-	                    Playlist_FreeData(ppd);
-	                } else {
-	                    count++;
-	                }
+                    CopyMediaInfo2PlaylistData(ppd, &minfo);
+                    if (Playlist_AddData(ppd) == -1) {
+                        Playlist_FreeData(ppd);
+                    } else {
+                        count++;
+                    }
                 }
             }
         }
         if (count) {
             if (gOptionShuffle) {
                 int numlist;
-	            numlist = Playlist_GetNumData();
-	            Playlist_SetCurrentPlay(numlist - 1);
-	            Playlist_Shuffle();
-	            Playlist_SetCurrentPlay(0);
-	            Playlist_Shuffle();
-	        }
-	        Playlist_SetCurrentPlay(0);
-	        ppd = Playlist_GetData(0);
-	        Stream_Restart(ppd->filename_w, 0);
-	        // snprintf(gFilename, MAX_PATH - 1, "%s", ppd->filename);
-	        // gFilename[MAX_PATH - 1] = 0;
+                numlist = Playlist_GetNumData();
+                Playlist_SetCurrentPlay(numlist - 1);
+                Playlist_Shuffle();
+                Playlist_SetCurrentPlay(0);
+                Playlist_Shuffle();
+            }
+            Playlist_SetCurrentPlay(0);
+            ppd = Playlist_GetData(0);
+            Stream_Restart(ppd->filename_w, 0);
+            // snprintf(gFilename, MAX_PATH - 1, "%s", ppd->filename);
+            // gFilename[MAX_PATH - 1] = 0;
         } else {
             printf("No playable file.\n");
             Sleep(500);
@@ -2643,16 +2643,16 @@ int main(int argc, char *argv[])
                     !Framebuffer_ListNum(FRAMEBUFFER_TYPE_VIDEO) ) {
             if (Playlist_GetCurrentPlay() >= 0) {
                 if( Framebuffer_ListNum(FRAMEBUFFER_TYPE_AUDIO) ) {
-	                Playlist_SetNextCurrentPlay();
-	                ppd = Playlist_GetData(Playlist_GetCurrentPlay());
-	                if (!ppd->video || (ppd->video && isVideoStillPicture(ppd->video_codec_id))) {
-	                    Stream_Restart(ppd->filename_w, 1);  // try audio gapless
-	                } else {
-	                    Playlist_SetPreviousCurrentPlay();
-	                }
+                    Playlist_SetNextCurrentPlay();
+                    ppd = Playlist_GetData(Playlist_GetCurrentPlay());
+                    if (!ppd->video || (ppd->video && isVideoStillPicture(ppd->video_codec_id))) {
+                        Stream_Restart(ppd->filename_w, 1);  // try audio gapless
+                    } else {
+                        Playlist_SetPreviousCurrentPlay();
+                    }
                 } else {
-	                Playlist_SetNextCurrentPlay();
-	                ppd = Playlist_GetData(Playlist_GetCurrentPlay());
+                    Playlist_SetNextCurrentPlay();
+                    ppd = Playlist_GetData(Playlist_GetCurrentPlay());
                     Stream_Restart(ppd->filename_w, 0);
                 }
             } else {
@@ -2666,12 +2666,12 @@ int main(int argc, char *argv[])
         {  // experimental 20150228  audio read 3times of video one.
             int i;
             for (i = 0; i < 3; i++ ) {
-		        if (!gReadDoneAudio && !gPause) {
-		            if (AudioStream_ReadAndBuffer() < 0) {
-		                gReadDoneAudio = 1;
-		            }
-		        }
-		    }
+                if (!gReadDoneAudio && !gPause) {
+                    if (AudioStream_ReadAndBuffer() < 0) {
+                        gReadDoneAudio = 1;
+                    }
+                }
+            }
         }
         if (!gReadDoneVideo && !gPause) {
             if (VideoStream_ReadAndBuffer() < 0) {
@@ -2693,187 +2693,187 @@ int main(int argc, char *argv[])
             
             abuf = Framebuffer_Get(FRAMEBUFFER_TYPE_AUDIOWAVE);
             if (abuf) {
-	            stream16len = abuf->size / 2;
-	            stream16buf = (int16_t *)abuf->data;
-	            AudioWave_Draw(gBitmapWave, stream16buf, stream16len);
-	            Framebuffer_Free(abuf);
-	        }
+                stream16len = abuf->size / 2;
+                stream16buf = (int16_t *)abuf->data;
+                AudioWave_Draw(gBitmapWave, stream16buf, stream16len);
+                Framebuffer_Free(abuf);
+            }
         }
         */
         
         // video (character) rendering
         //if (!gPause && !gDebugDecode) {
         if (1 && !gDebugDecode) {
-	        if (Framebuffer_ListNum(FRAMEBUFFER_TYPE_VIDEO) && !gPause) {
-		        pts = Framebuffer_GetPts(FRAMEBUFFER_TYPE_VIDEO);
-		        
-		        if ((gReadDoneAudio || isFramebuffer_Full(FRAMEBUFFER_TYPE_AUDIO)) && (gReadDoneVideo || isFramebuffer_Full(FRAMEBUFFER_TYPE_VIDEO))) {
-		            int64_t stime;
-		            stime = pts - ((int64_t)GetTickCount() * 1000 - gStartTime) - (10*1000);
-		            if (stime > 100000) stime = 100000;
-		            if (stime > 0) Sleep(stime / 1000);
-		        }
-		        
-		        if (pts < ((int64_t)GetTickCount() * 1000 - gStartTime)) {
-		            gVDiff = ((int64_t)GetTickCount() * 1000 - gStartTime) - pts;
-		            
-		            skip = 0;
-		            if ((video_stream_index != -1) && 1) {  // frame skip (experimental 20150228)
-				        int num, den, fps, dur;
-				        den = fmt_ctx->streams[video_stream_index]->avg_frame_rate.den;
-				        num = fmt_ctx->streams[video_stream_index]->avg_frame_rate.num;
-				        if (den) {
-				            fps = num / den;
-				            if (fps >= 12) {
-				                dur = 1000000 / fps;
-				                if (gVDiff > dur * 3) {  // 3 frames late then skip next picture
-				                    while ((Framebuffer_ListNum(FRAMEBUFFER_TYPE_VIDEO) > 0) && 
-				                            (Framebuffer_GetPts(FRAMEBUFFER_TYPE_VIDEO) < ((int64_t)GetTickCount() * 1000 - gStartTime))) {
-					                    fbuf = Framebuffer_Get(FRAMEBUFFER_TYPE_VIDEO);
-					                    if (fbuf) {
-					                        TextScreen_FreeBitmap((TextScreenBitmap *)fbuf->data);
-					                        Framebuffer_Free(fbuf);
-					                    }
-				                    }
-				                    /*
-				                    fbuf = Framebuffer_Get(FRAMEBUFFER_TYPE_VIDEO);
-				                    if (fbuf) {
-				                         TextScreen_FreeBitmap((TextScreenBitmap *)fbuf->data);
-				                         Framebuffer_Free(fbuf);
-				                    }
-				                    */
-				                    //printf("Skipped ");
-				                    gFrameDrop = 1;
-				                    skip = 1;
-				                }
-				            }
-				        }
-				    }
-		            
-		            if (!skip) {
-			            fbuf = Framebuffer_Get(FRAMEBUFFER_TYPE_VIDEO);
-			            if (fbuf) {
-			                if (gBitmapClip) {
-			                    TextScreen_FreeBitmap(gBitmapClip);
-			                    gBitmapClip = NULL;
-			                }
-			                if (gBitmapLastVideo) {
-			                    TextScreen_FreeBitmap(gBitmapLastVideo);
-			                    gBitmapLastVideo = NULL;
-			                }
-				            bitmap = (TextScreenBitmap *)fbuf->data;
-				            gBitmapLastVideo = TextScreen_DupBitmap(bitmap);
-				            
-				            if (gShowPlaylist) {
-				                if (!gBitmapList) gBitmapList = TextScreen_DupBitmap(gBitmap);
-				                TextScreen_ClearBitmap(gBitmap);
-				                Do_DrawPlaylist(gBitmap);
-				                if (TextScreen_CompareBitmap(gBitmap, gBitmapList, 0, 0)) {
-				                    TextScreen_ShowBitmap(gBitmap, 0, 0);
-				                    if (gBitmapList) TextScreen_FreeBitmap(gBitmapList);
-				                    gBitmapList = TextScreen_DupBitmap(gBitmap);
-				                } else {
-				                    TextScreen_SetCursorPos(0, 0);
-				                }
-				                gBitmapClip = TextScreen_DupBitmap(gBitmap);
-				            } else {
-					            if (gShowWave) {
-					                {
-					                    MUTEX_LOCK(gMutexBitmapWave);
-					                    TextScreen_CopyBitmap(bitmap, gBitmapWave, 0, 0);
-					                    MUTEX_UNLOCK(gMutexBitmapWave);
-					                    Do_DrawInfo(bitmap);
-					                    TextScreen_ShowBitmap(bitmap, 0, 0);
-					                    gBitmapClip = bitmap;
-					                }
-					            } else {
-					                Do_DrawInfo(bitmap);
-					                TextScreen_ShowBitmap(bitmap, 0, 0);
-					                gBitmapClip = bitmap;
-					            }
-					        }
-				            Framebuffer_Free(fbuf);
-				            TextScreen_SetCursorPos(0, gBitmap->height + screen.topMargin);
-				            Do_DrawStatus();
-				        }
-				        //Do_DrawStatus();
-				    }
-		        }
-		    } else {
-		        
-		        if ((gReadDoneAudio || isFramebuffer_Full(FRAMEBUFFER_TYPE_AUDIO)) && 
-		            (gReadDoneVideo || isFramebuffer_Full(FRAMEBUFFER_TYPE_VIDEO)) && !gPause) {
-		            int64_t stime;
-		            
-		            stime = pts - ((int64_t)GetTickCount() * 1000 - gStartTime) - (0*1000);
-		            if ((stime > 100000) || (stime < -100000)) {
-		                pts = ((int64_t)GetTickCount() * 1000 - gStartTime);
-		            }
-		            if (stime > 100000) stime = 100000;
-		            if (stime > 0) Sleep(stime / 1000);
-		        }
-		        
-		        if ((pts < ((int64_t)GetTickCount() * 1000 - gStartTime)) || gPause) {
-		            if (!gPause) {
-		                gVDiff = ((int64_t)GetTickCount() * 1000 - gStartTime) - pts;
-		            } else {
-		                gVDiff = 0;
-		            }
-		            if (gBitmapClip) {
-		                TextScreen_FreeBitmap(gBitmapClip);
-		                gBitmapClip = NULL;
-		            }
-		            if (gShowPlaylist) {
-		                if (!gBitmapList) gBitmapList = TextScreen_DupBitmap(gBitmap);
-		                TextScreen_ClearBitmap(gBitmap);
-		                Do_DrawPlaylist(gBitmap);
-		                if (TextScreen_CompareBitmap(gBitmap, gBitmapList, 0, 0)) {
-		                    TextScreen_ShowBitmap(gBitmap, 0, 0);
-		                    if (gBitmapList) TextScreen_FreeBitmap(gBitmapList);
-		                    gBitmapList = TextScreen_DupBitmap(gBitmap);
-		                } else {
-				            TextScreen_SetCursorPos(0, 0);
-		                }
-		                gBitmapClip = TextScreen_DupBitmap(gBitmap);
-		            } else {
-			            if (gShowWave || (video_stream_index == -1)) {
-			                {
-			                    MUTEX_LOCK(gMutexBitmapWave);
-			                    TextScreen_CopyBitmap(gBitmap, gBitmapWave, 0, 0);
-			                    MUTEX_UNLOCK(gMutexBitmapWave);
-			                    Do_DrawInfo(gBitmap);
-			                    TextScreen_ShowBitmap(gBitmap, 0, 0);
-			                    gBitmapClip = TextScreen_DupBitmap(gBitmap);
-			                }
-			            } else {
-			                
-			                if (gBitmapLastVideo) {
-			                    TextScreen_ClearBitmap(gBitmap);
-			                    TextScreen_CopyBitmap(gBitmap, gBitmapLastVideo, 0, 0);
-			                } else {
-			                    TextScreen_ClearBitmap(gBitmap);
-			                }
-			                
-			                Do_DrawInfo(gBitmap);
-			                TextScreen_ShowBitmap(gBitmap, 0, 0);
-			                gBitmapClip = TextScreen_DupBitmap(gBitmap);
-			            }
-			        }
-				    TextScreen_SetCursorPos(0, gBitmap->height + screen.topMargin);
-		            Do_DrawStatus();
-		            pts = (int64_t)GetTickCount() * 1000 - gStartTime + 40000;
-		        }
-		    }
-		}
+            if (Framebuffer_ListNum(FRAMEBUFFER_TYPE_VIDEO) && !gPause) {
+                pts = Framebuffer_GetPts(FRAMEBUFFER_TYPE_VIDEO);
+                
+                if ((gReadDoneAudio || isFramebuffer_Full(FRAMEBUFFER_TYPE_AUDIO)) && (gReadDoneVideo || isFramebuffer_Full(FRAMEBUFFER_TYPE_VIDEO))) {
+                    int64_t stime;
+                    stime = pts - ((int64_t)GetTickCount() * 1000 - gStartTime) - (10*1000);
+                    if (stime > 100000) stime = 100000;
+                    if (stime > 0) Sleep(stime / 1000);
+                }
+                
+                if (pts < ((int64_t)GetTickCount() * 1000 - gStartTime)) {
+                    gVDiff = ((int64_t)GetTickCount() * 1000 - gStartTime) - pts;
+                    
+                    skip = 0;
+                    if ((video_stream_index != -1) && 1) {  // frame skip (experimental 20150228)
+                        int num, den, fps, dur;
+                        den = fmt_ctx->streams[video_stream_index]->avg_frame_rate.den;
+                        num = fmt_ctx->streams[video_stream_index]->avg_frame_rate.num;
+                        if (den) {
+                            fps = num / den;
+                            if (fps >= 12) {
+                                dur = 1000000 / fps;
+                                if (gVDiff > dur * 3) {  // 3 frames late then skip next picture
+                                    while ((Framebuffer_ListNum(FRAMEBUFFER_TYPE_VIDEO) > 0) && 
+                                            (Framebuffer_GetPts(FRAMEBUFFER_TYPE_VIDEO) < ((int64_t)GetTickCount() * 1000 - gStartTime))) {
+                                        fbuf = Framebuffer_Get(FRAMEBUFFER_TYPE_VIDEO);
+                                        if (fbuf) {
+                                            TextScreen_FreeBitmap((TextScreenBitmap *)fbuf->data);
+                                            Framebuffer_Free(fbuf);
+                                        }
+                                    }
+                                    /*
+                                    fbuf = Framebuffer_Get(FRAMEBUFFER_TYPE_VIDEO);
+                                    if (fbuf) {
+                                         TextScreen_FreeBitmap((TextScreenBitmap *)fbuf->data);
+                                         Framebuffer_Free(fbuf);
+                                    }
+                                    */
+                                    //printf("Skipped ");
+                                    gFrameDrop = 1;
+                                    skip = 1;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (!skip) {
+                        fbuf = Framebuffer_Get(FRAMEBUFFER_TYPE_VIDEO);
+                        if (fbuf) {
+                            if (gBitmapClip) {
+                                TextScreen_FreeBitmap(gBitmapClip);
+                                gBitmapClip = NULL;
+                            }
+                            if (gBitmapLastVideo) {
+                                TextScreen_FreeBitmap(gBitmapLastVideo);
+                                gBitmapLastVideo = NULL;
+                            }
+                            bitmap = (TextScreenBitmap *)fbuf->data;
+                            gBitmapLastVideo = TextScreen_DupBitmap(bitmap);
+                            
+                            if (gShowPlaylist) {
+                                if (!gBitmapList) gBitmapList = TextScreen_DupBitmap(gBitmap);
+                                TextScreen_ClearBitmap(gBitmap);
+                                Do_DrawPlaylist(gBitmap);
+                                if (TextScreen_CompareBitmap(gBitmap, gBitmapList, 0, 0)) {
+                                    TextScreen_ShowBitmap(gBitmap, 0, 0);
+                                    if (gBitmapList) TextScreen_FreeBitmap(gBitmapList);
+                                    gBitmapList = TextScreen_DupBitmap(gBitmap);
+                                } else {
+                                    TextScreen_SetCursorPos(0, 0);
+                                }
+                                gBitmapClip = TextScreen_DupBitmap(gBitmap);
+                            } else {
+                                if (gShowWave) {
+                                    {
+                                        MUTEX_LOCK(gMutexBitmapWave);
+                                        TextScreen_CopyBitmap(bitmap, gBitmapWave, 0, 0);
+                                        MUTEX_UNLOCK(gMutexBitmapWave);
+                                        Do_DrawInfo(bitmap);
+                                        TextScreen_ShowBitmap(bitmap, 0, 0);
+                                        gBitmapClip = bitmap;
+                                    }
+                                } else {
+                                    Do_DrawInfo(bitmap);
+                                    TextScreen_ShowBitmap(bitmap, 0, 0);
+                                    gBitmapClip = bitmap;
+                                }
+                            }
+                            Framebuffer_Free(fbuf);
+                            TextScreen_SetCursorPos(0, gBitmap->height + screen.topMargin);
+                            Do_DrawStatus();
+                        }
+                        //Do_DrawStatus();
+                    }
+                }
+            } else {
+                
+                if ((gReadDoneAudio || isFramebuffer_Full(FRAMEBUFFER_TYPE_AUDIO)) && 
+                    (gReadDoneVideo || isFramebuffer_Full(FRAMEBUFFER_TYPE_VIDEO)) && !gPause) {
+                    int64_t stime;
+                    
+                    stime = pts - ((int64_t)GetTickCount() * 1000 - gStartTime) - (0*1000);
+                    if ((stime > 100000) || (stime < -100000)) {
+                        pts = ((int64_t)GetTickCount() * 1000 - gStartTime);
+                    }
+                    if (stime > 100000) stime = 100000;
+                    if (stime > 0) Sleep(stime / 1000);
+                }
+                
+                if ((pts < ((int64_t)GetTickCount() * 1000 - gStartTime)) || gPause) {
+                    if (!gPause) {
+                        gVDiff = ((int64_t)GetTickCount() * 1000 - gStartTime) - pts;
+                    } else {
+                        gVDiff = 0;
+                    }
+                    if (gBitmapClip) {
+                        TextScreen_FreeBitmap(gBitmapClip);
+                        gBitmapClip = NULL;
+                    }
+                    if (gShowPlaylist) {
+                        if (!gBitmapList) gBitmapList = TextScreen_DupBitmap(gBitmap);
+                        TextScreen_ClearBitmap(gBitmap);
+                        Do_DrawPlaylist(gBitmap);
+                        if (TextScreen_CompareBitmap(gBitmap, gBitmapList, 0, 0)) {
+                            TextScreen_ShowBitmap(gBitmap, 0, 0);
+                            if (gBitmapList) TextScreen_FreeBitmap(gBitmapList);
+                            gBitmapList = TextScreen_DupBitmap(gBitmap);
+                        } else {
+                            TextScreen_SetCursorPos(0, 0);
+                        }
+                        gBitmapClip = TextScreen_DupBitmap(gBitmap);
+                    } else {
+                        if (gShowWave || (video_stream_index == -1)) {
+                            {
+                                MUTEX_LOCK(gMutexBitmapWave);
+                                TextScreen_CopyBitmap(gBitmap, gBitmapWave, 0, 0);
+                                MUTEX_UNLOCK(gMutexBitmapWave);
+                                Do_DrawInfo(gBitmap);
+                                TextScreen_ShowBitmap(gBitmap, 0, 0);
+                                gBitmapClip = TextScreen_DupBitmap(gBitmap);
+                            }
+                        } else {
+                            
+                            if (gBitmapLastVideo) {
+                                TextScreen_ClearBitmap(gBitmap);
+                                TextScreen_CopyBitmap(gBitmap, gBitmapLastVideo, 0, 0);
+                            } else {
+                                TextScreen_ClearBitmap(gBitmap);
+                            }
+                            
+                            Do_DrawInfo(gBitmap);
+                            TextScreen_ShowBitmap(gBitmap, 0, 0);
+                            gBitmapClip = TextScreen_DupBitmap(gBitmap);
+                        }
+                    }
+                    TextScreen_SetCursorPos(0, gBitmap->height + screen.topMargin);
+                    Do_DrawStatus();
+                    pts = (int64_t)GetTickCount() * 1000 - gStartTime + 40000;
+                }
+            }
+        }
         
-	    Do_Resize_Check();
-	    Do_Keyboard_Check();
-	    if (gPause) {
-	        Sleep(40);
-	    } else {
-	        Sleep(0);
-	    }
-	    // SetThreadExecutionState(ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED | ES_CONTINUOUS);
+        Do_Resize_Check();
+        Do_Keyboard_Check();
+        if (gPause) {
+            Sleep(40);
+        } else {
+            Sleep(0);
+        }
+        // SetThreadExecutionState(ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED | ES_CONTINUOUS);
     }
     
     exit_proc();

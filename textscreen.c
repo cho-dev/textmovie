@@ -122,7 +122,7 @@ int TextScreen_ClearScreen(void)
 int TextScreen_GetConsoleSize(int *width, int *height)
 {
 #ifdef _WIN32
-	HANDLE stdouth;
+    HANDLE stdouth;
     CONSOLE_SCREEN_BUFFER_INFO info;
     int ret;
     

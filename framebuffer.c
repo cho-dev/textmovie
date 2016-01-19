@@ -144,14 +144,14 @@ int Framebuffer_ListNum(int type)
     count = 0;
     
     if (*buflist) {
-	    curbuf = (*buflist);
-	    while (1) {
-	        if (curbuf->type == type) count++;
-	        if (curbuf->next == NULL) break;
-	        curbuf = curbuf->next;
-	    }
-	}
-	
+        curbuf = (*buflist);
+        while (1) {
+            if (curbuf->type == type) count++;
+            if (curbuf->next == NULL) break;
+            curbuf = curbuf->next;
+        }
+    }
+    
     MUTEX_UNLOCK(framebuffermutex);
     
     return count;
@@ -171,13 +171,13 @@ int isFramebuffer_Full(int type)
     
     listnum = 0;
     if (*buflist) {
-	    curbuf = (*buflist);
-	    while (1) {
-	        if (curbuf->type == type) listnum++;
-	        if (curbuf->next == NULL) break;
-	        curbuf = curbuf->next;
-	    }
-	}
+        curbuf = (*buflist);
+        while (1) {
+            if (curbuf->type == type) listnum++;
+            if (curbuf->next == NULL) break;
+            curbuf = curbuf->next;
+        }
+    }
     
     MUTEX_UNLOCK(framebuffermutex);
     
@@ -201,13 +201,13 @@ int Framebuffer_Sendback(Framebuffer *buf)
     
     listnum = 0;
     if (*buflist) {
-	    curbuf = (*buflist);
-	    while (1) {
-	        if (curbuf->type == buf->type) listnum++;
-	        if (curbuf->next == NULL) break;
-	        curbuf = curbuf->next;
-	    }
-	}
+        curbuf = (*buflist);
+        while (1) {
+            if (curbuf->type == buf->type) listnum++;
+            if (curbuf->next == NULL) break;
+            curbuf = curbuf->next;
+        }
+    }
     
     if (listnum >= maxsize) {
         // printf("audio buffer overflow! \n");
@@ -237,13 +237,13 @@ int Framebuffer_Put(Framebuffer *buf)
     
     listnum = 0;
     if (*buflist) {
-	    curbuf = (*buflist);
-	    while (1) {
-	        if (curbuf->type == buf->type) listnum++;
-	        if (curbuf->next == NULL) break;
-	        curbuf = curbuf->next;
-	    }
-	}
+        curbuf = (*buflist);
+        while (1) {
+            if (curbuf->type == buf->type) listnum++;
+            if (curbuf->next == NULL) break;
+            curbuf = curbuf->next;
+        }
+    }
     
     if (listnum >= maxsize) {
         // printf("audio buffer overflow! \n");
@@ -252,14 +252,14 @@ int Framebuffer_Put(Framebuffer *buf)
     }
     
     if (*buflist) {
-	    curbuf = (*buflist);
-	    while (curbuf->next != NULL )
-	        curbuf = curbuf->next;
-	    curbuf->next = buf;
-	} else {
-	    *buflist = buf;
-	}
-	buf->next = NULL;
+        curbuf = (*buflist);
+        while (curbuf->next != NULL )
+            curbuf = curbuf->next;
+        curbuf->next = buf;
+    } else {
+        *buflist = buf;
+    }
+    buf->next = NULL;
     
     MUTEX_UNLOCK(framebuffermutex);
     
@@ -279,26 +279,26 @@ Framebuffer *Framebuffer_Get(int type)
     prevbuf = NULL;
     curbuf  = NULL;
     if (*buflist) {
-	    curbuf = (*buflist);
-	    while (1) {
-	        if (curbuf->type == type) {
-			    if (prevbuf) {
-			        prevbuf->next = curbuf->next;
-			    } else {
-			        *buflist = curbuf->next;
-			    }
-			    curbuf->next = NULL;
-			    break;
-	        }
-	        if (curbuf->next == NULL) {
-	            curbuf = NULL;
-	            break;
-	        }
-	        prevbuf = curbuf;
-	        curbuf = curbuf->next;
-	    }
-	}
-	
+        curbuf = (*buflist);
+        while (1) {
+            if (curbuf->type == type) {
+                if (prevbuf) {
+                    prevbuf->next = curbuf->next;
+                } else {
+                    *buflist = curbuf->next;
+                }
+                curbuf->next = NULL;
+                break;
+            }
+            if (curbuf->next == NULL) {
+                curbuf = NULL;
+                break;
+            }
+            prevbuf = curbuf;
+            curbuf = curbuf->next;
+        }
+    }
+    
     MUTEX_UNLOCK(framebuffermutex);
     
     return curbuf;
@@ -315,16 +315,16 @@ Framebuffer *Framebuffer_GetNoRemove(int type)
     
     curbuf  = NULL;
     if (*buflist) {
-	    curbuf = (*buflist);
-	    while (curbuf->type != type) {
-	        if (curbuf->next == NULL) {
-	            curbuf = NULL;
-	            break;
-	        }
-	        curbuf = curbuf->next;
-	    }
-	}
-	
+        curbuf = (*buflist);
+        while (curbuf->type != type) {
+            if (curbuf->next == NULL) {
+                curbuf = NULL;
+                break;
+            }
+            curbuf = curbuf->next;
+        }
+    }
+    
     MUTEX_UNLOCK(framebuffermutex);
     
     return curbuf;
@@ -342,17 +342,17 @@ int64_t Framebuffer_GetPts(int type)
     
     curbuf = NULL;
     if (*buflist) {
-	    curbuf = (*buflist);
-	    while (curbuf->type != type) {
-	        if (curbuf->next == NULL) {
-	            curbuf = NULL;
-	            break;
-	        }
-	        curbuf = curbuf->next;
-	    }
-	}
-	
-	if (curbuf) {
+        curbuf = (*buflist);
+        while (curbuf->type != type) {
+            if (curbuf->next == NULL) {
+                curbuf = NULL;
+                break;
+            }
+            curbuf = curbuf->next;
+        }
+    }
+    
+    if (curbuf) {
         pts =  curbuf->pts;
     } else {
         pts =  AV_NOPTS_VALUE;
@@ -377,17 +377,17 @@ int Framebuffer_ClearPts(int type)
     count = 0;
     
     if (*buflist) {
-	    curbuf = (*buflist);
-	    while (1) {
-	        if (curbuf->type == type) {
-	            curbuf->pts = 0;
-	            count++;
-	        }
-	        if (curbuf->next == NULL) break;
-	        curbuf = curbuf->next;
-	    }
-	}
-	
+        curbuf = (*buflist);
+        while (1) {
+            if (curbuf->type == type) {
+                curbuf->pts = 0;
+                count++;
+            }
+            if (curbuf->next == NULL) break;
+            curbuf = curbuf->next;
+        }
+    }
+    
     MUTEX_UNLOCK(framebuffermutex);
     
     return count;
@@ -404,23 +404,23 @@ Framebuffer *Framebuffer_New(int size, int clear)
     if (buf) {
         buf->data = NULL;
         if (size) {
-	        buf->data = (void *)malloc(size);
-	        if (!buf->data) {
-	            free(buf);
-	            return NULL;
-	        }
-	        if (clear) {
-	            p = (uint8_t *)buf->data;
-	            for (i = 0; i < size; i++)
-	                p[i] = 0;
-	        }
-	    }
-	    buf->next  = NULL;
-	    buf->pts   = 0;
-	    buf->size  = size;
-	    buf->type  = FRAMEBUFFER_TYPE_VOID;
-	    buf->flags = 0;
-	    buf->pos   = 0;
+            buf->data = (void *)malloc(size);
+            if (!buf->data) {
+                free(buf);
+                return NULL;
+            }
+            if (clear) {
+                p = (uint8_t *)buf->data;
+                for (i = 0; i < size; i++)
+                    p[i] = 0;
+            }
+        }
+        buf->next  = NULL;
+        buf->pts   = 0;
+        buf->size  = size;
+        buf->type  = FRAMEBUFFER_TYPE_VOID;
+        buf->flags = 0;
+        buf->pos   = 0;
     }
     return buf;
 }

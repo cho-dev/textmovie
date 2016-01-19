@@ -74,9 +74,9 @@ static size_t GetFilenameFromFullpath(char *filename, int filenamelen , const ch
         }
     }
     
-	snprintf(filename, filenamelen, "%s", (fullpathname + head));
-	
-	return strlen((fullpathname + head));
+    snprintf(filename, filenamelen, "%s", (fullpathname + head));
+    
+    return strlen((fullpathname + head));
 }
 
 // lower case -> upper case
@@ -99,13 +99,13 @@ static size_t GetFilenameForSort(char *exfilename, int filenamelen, const char *
         if (shiftjis) {
             shiftjis = 0;
         } else {
-	        if (((unsigned int)ch >= 'a') && ((unsigned int)ch <= 'z')) ch -= 0x20; // to upper case
-	        
-	        if ( (((unsigned char)ch >= 0x81) && ((unsigned char)ch <= 0x9f)) || 
-	             (((unsigned char)ch >= 0xe0) && ((unsigned char)ch <= 0xfc)) ) { // Japanese Shift-JIS code check
-	            shiftjis = 1;
-	        }
-	    }
+            if (((unsigned int)ch >= 'a') && ((unsigned int)ch <= 'z')) ch -= 0x20; // to upper case
+            
+            if ( (((unsigned char)ch >= 0x81) && ((unsigned char)ch <= 0x9f)) || 
+                 (((unsigned char)ch >= 0xe0) && ((unsigned char)ch <= 0xfc)) ) { // Japanese Shift-JIS code check
+                shiftjis = 1;
+            }
+        }
         // if (((unsigned int)ch >= 'a') && ((unsigned int)ch <= 'z')) ch -= 0x20;
         pad = 0;
         if (!n) {
@@ -222,86 +222,86 @@ int Playlist_SortCompare(int p1, int p2, int direction)
 
 void Playlist_SortFB(int start, int end, int direction)
 {
-	int mid = (end - start) / 2 + start;
+    int mid = (end - start) / 2 + start;
     int i, k1, k2;
-	
-	if (mid - start >= 2) Playlist_SortFB(start, mid, direction);
-	if (end - mid   >= 2) Playlist_SortFB(mid, end, direction);
-	
+    
+    if (mid - start >= 2) Playlist_SortFB(start, mid, direction);
+    if (end - mid   >= 2) Playlist_SortFB(mid, end, direction);
+    
     k2 = mid;
     for (k1 = start; k1 < end; k1++) {
-		if ((k1 == k2) || (k2 >= end)) break;
-	    if (Playlist_SortCompare(k1, k2, direction) > 0) {
-	        PlaylistData *tmp;
-	        tmp = gPlaylist[k2];
-	        for (i = k2; i > k1; i--) {
-	            gPlaylist[i] = gPlaylist[i-1];
-	        }
-	        gPlaylist[k1] = tmp;
-			k2++;
-		}
-	}
+        if ((k1 == k2) || (k2 >= end)) break;
+        if (Playlist_SortCompare(k1, k2, direction) > 0) {
+            PlaylistData *tmp;
+            tmp = gPlaylist[k2];
+            for (i = k2; i > k1; i--) {
+                gPlaylist[i] = gPlaylist[i-1];
+            }
+            gPlaylist[k1] = tmp;
+            k2++;
+        }
+    }
 }
 
 /*
 int Playlist_SortFB(int start, int end, int direction, int currentplay)
 {
-	int mid = (end - start) / 2 + start;
-	int top = mid - start;
-	int bottom = end - mid;
-	
-	if (1) {
-		if (top >= 3) {
-			currentplay = Playlist_SortFB(start, mid, direction, currentplay);
-		} else if (top == 2) {
-		    if (Playlist_SortCompare(start, start+1, direction) > 0) {
+    int mid = (end - start) / 2 + start;
+    int top = mid - start;
+    int bottom = end - mid;
+    
+    if (1) {
+        if (top >= 3) {
+            currentplay = Playlist_SortFB(start, mid, direction, currentplay);
+        } else if (top == 2) {
+            if (Playlist_SortCompare(start, start+1, direction) > 0) {
                 Playlist_SwapData(start, start+1);
-		        if (currentplay == start) {
-		            currentplay = start+1;
-		        } else if (currentplay == start+1) {
-		            currentplay = start;
-		        }
+                if (currentplay == start) {
+                    currentplay = start+1;
+                } else if (currentplay == start+1) {
+                    currentplay = start;
+                }
             }
-	    }
-		
-		if (bottom >= 3) {
-			currentplay = Playlist_SortFB(mid, end, direction, currentplay);
-		} else if (bottom == 2) {
-		    if (Playlist_SortCompare(mid, mid+1, direction) > 0) {
+        }
+        
+        if (bottom >= 3) {
+            currentplay = Playlist_SortFB(mid, end, direction, currentplay);
+        } else if (bottom == 2) {
+            if (Playlist_SortCompare(mid, mid+1, direction) > 0) {
                 Playlist_SwapData(mid, mid+1);
-		        if (currentplay == mid) {
-		            currentplay = mid+1;
-		        } else if (currentplay == mid+1) {
-		            currentplay = mid;
-		        }
+                if (currentplay == mid) {
+                    currentplay = mid+1;
+                } else if (currentplay == mid+1) {
+                    currentplay = mid;
+                }
             }
-	    }
-	}
-	
+        }
+    }
+    
     {
-    	int i, j, k2, rf;
-    	
+        int i, j, k2, rf;
+        
         k2 = mid;
         for (i = start; i < end; i++) {
-    		if (i == k2)   break;
-    		if (k2 >= end) break;
-    	    if (Playlist_SortCompare(i, k2, direction) > 0) {
-    	        PlaylistData *tmp;
-    	        tmp = gPlaylist[k2];
-    	        if (currentplay == k2) rf = 1; else rf = 0;
-    	        for (j = k2; j > i; j--) {
-    	            gPlaylist[j] = gPlaylist[j-1];
-			        if (currentplay == j-1) {
-			            currentplay = j;
-			        }
-    	        }
-    	        gPlaylist[i] = tmp;
-		        if (rf) {
-		            currentplay = i;
-		        }
-    			k2++;
-    		}
-    	}
+            if (i == k2)   break;
+            if (k2 >= end) break;
+            if (Playlist_SortCompare(i, k2, direction) > 0) {
+                PlaylistData *tmp;
+                tmp = gPlaylist[k2];
+                if (currentplay == k2) rf = 1; else rf = 0;
+                for (j = k2; j > i; j--) {
+                    gPlaylist[j] = gPlaylist[j-1];
+                    if (currentplay == j-1) {
+                        currentplay = j;
+                    }
+                }
+                gPlaylist[i] = tmp;
+                if (rf) {
+                    currentplay = i;
+                }
+                k2++;
+            }
+        }
     }
     return currentplay;
 }
@@ -429,29 +429,29 @@ void Playlist_Sort(int direction)
             //pd2 = Playlist_GetData(j+1);
             if (pd1 && pd2) {
                 
-	            GetFilenameFromFullpath(strbuf, MAX_PATH - 1, pd1->filename);
-	            GetFilenameForSort(strexnum1, MAX_PATH - 1, strbuf);
-	            GetFilenameFromFullpath(strbuf, MAX_PATH - 1, pd2->filename);
-	            GetFilenameForSort(strexnum2, MAX_PATH - 1, strbuf);
-	            
-	            //GetFilenameFromFullpath(strexnum1, MAX_PATH - 1, pd1->filename);
-	            //GetFilenameFromFullpath(strexnum2, MAX_PATH - 1, pd2->filename);
-	            
-	            if (direction) {
-	               cmp = (strcmp(strexnum1, strexnum2) < 0);
-	            } else {
-	               cmp = (strcmp(strexnum1, strexnum2) > 0);
-	            }
-	            
-	            if(cmp) {
-	                Playlist_SwapData(j, j+1);
-			        if (currentplay == j) {
-			            currentplay = j+1;
-			        } else if (currentplay == j+1) {
-			            currentplay = j;
-			        }
-	            }
-	        }
+                GetFilenameFromFullpath(strbuf, MAX_PATH - 1, pd1->filename);
+                GetFilenameForSort(strexnum1, MAX_PATH - 1, strbuf);
+                GetFilenameFromFullpath(strbuf, MAX_PATH - 1, pd2->filename);
+                GetFilenameForSort(strexnum2, MAX_PATH - 1, strbuf);
+                
+                //GetFilenameFromFullpath(strexnum1, MAX_PATH - 1, pd1->filename);
+                //GetFilenameFromFullpath(strexnum2, MAX_PATH - 1, pd2->filename);
+                
+                if (direction) {
+                   cmp = (strcmp(strexnum1, strexnum2) < 0);
+                } else {
+                   cmp = (strcmp(strexnum1, strexnum2) > 0);
+                }
+                
+                if(cmp) {
+                    Playlist_SwapData(j, j+1);
+                    if (currentplay == j) {
+                        currentplay = j+1;
+                    } else if (currentplay == j+1) {
+                        currentplay = j;
+                    }
+                }
+            }
         }
     }
     Playlist_SetCurrentPlay(currentplay);

@@ -27,6 +27,7 @@
 *.i*86
 *.x86_64
 *.hex
+*.dll
 
 # Debug files
 *.dSYM/
@@ -36,3 +37,17 @@
 *.gz
 *.bz2
 *.tar
+
+# media file
+*.mp4
+*.m4a
+*.mp3
+*.wav
+*.wma
+*.wmv
+
+# archives
+/archive/
+
+# test folder
+/test/
