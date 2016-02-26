@@ -38,10 +38,8 @@ GPL version3 or later. see Eula(GPLv3).txt
 -------------------------------------------------------------------
 Other source file to make binary
 -------------------------------------------------------------------
-Binary textmovie.exe(build 423) uses following library.
-
 FFmpeg: (ffmpeg2.5 or later)
-ffmpeg-2.5.4.tar.bz2 from http://ffmpeg.org/
+ffmpeg-3.0.tar.bz2 from http://ffmpeg.org/
 
 SDL: (SDL1.2.15)
 SDL-1.2.15.tar.gz from https://www.libsdl.org/
