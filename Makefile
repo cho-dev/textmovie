@@ -37,7 +37,7 @@ LDLIBS   += -lmingw32 -lSDLmain -lSDL
 
 # other library
 LDLIBS   += -liconv -lz -lbz2 -lws2_32 -lpthread -lstdc++
-LDLIBS   += -lwinmm -lm -luser32 -lgdi32 -ldxguid
+LDLIBS   += -lwinmm -lm -luser32 -lgdi32 -ldxguid -lsecur32
 
 ######### option list
 CFLAGS   += -O2 -Wall -std=c99
